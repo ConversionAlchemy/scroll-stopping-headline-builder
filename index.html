@@ -4,6 +4,182 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="A private, rule-based headline generator built from proven conversion-copy frameworks.">
+  <title>Scroll-stopping headline builder</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cabin+Condensed:wght@700&family=PT+Sans:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="site-header">
+    <a class="text-logo" href="#top">ConversionAlchemy.com</a>
+    <button class="text-link" id="resetAll" type="button">Reset</button>
+  </header>
+
+  <main id="top">
+    <h1>Build headlines that earn the next line.</h1>
+
+    <form id="headlineForm">
+      <section class="field-group" aria-labelledby="selling-heading">
+        <div class="group-heading-row">
+          <h2 id="selling-heading">
+            <img src="https://conversionalchemy.b-cdn.net/App/Your%20product.jpg" alt="What you are selling" width="32" height="32">
+            What you are selling
+          </h2>
+          <button class="text-link" id="loadExample" type="button">Load example</button>
+        </div>
+        <label class="field">
+          <span class="field-label"><img src="https://conversionalchemy.b-cdn.net/App/Your%20product.jpg" alt="Product or brand" width="24" height="24">Product or brand</span>
+          <span class="example">Example: DreamCloud Pillow</span>
+          <input name="product" required autocomplete="off">
+        </label>
+        <label class="field">
+          <span class="field-label"><img src="https://conversionalchemy.b-cdn.net/App/Ideal%20customer.jpg" alt="Ideal customer" width="24" height="24">Ideal customer</span>
+          <span class="example">Example: side sleepers</span>
+          <input name="audience" required autocomplete="off">
+        </label>
+        <label class="field">
+          <span class="field-label"><img src="https://conversionalchemy.b-cdn.net/App/Desired%20outcome.jpg" alt="Desired outcome" width="24" height="24">Desired outcome</span>
+          <span class="example">Example: wake up without neck pain</span>
+          <input name="outcome" required autocomplete="off">
+        </label>
+      </section>
+
+      <section class="field-group" aria-labelledby="obstacles-heading">
+        <div class="group-heading-row">
+          <h2 id="obstacles-heading">
+            <img src="https://conversionalchemy.b-cdn.net/App/roadblock.jpg" alt="What is in the way" width="32" height="32">
+            What is in the way
+          </h2>
+        </div>
+        <label class="field">
+          <span class="field-label"><img src="https://conversionalchemy.b-cdn.net/App/Main%20problem%20.jpg" alt="Main pain or problem" width="24" height="24">Main pain or problem <span>optional</span></span>
+          <span class="example">Example: waking up with a stiff neck</span>
+          <input name="pain" autocomplete="off">
+        </label>
+        <label class="field">
+          <span class="field-label"><img src="https://conversionalchemy.b-cdn.net/App/frustrating%20alternative.jpg" alt="Frustrating alternative" width="24" height="24">Frustrating alternative <span>optional</span></span>
+          <span class="example">Example: constantly flipping your pillow</span>
+          <input name="alternative" autocomplete="off">
+        </label>
+        <label class="field">
+          <span class="field-label"><img src="https://conversionalchemy.b-cdn.net/App/roadblock.jpg" alt="Top objection or roadblock" width="24" height="24">Top objection or roadblock <span>optional</span></span>
+          <span class="example">Example: buying another expensive pillow</span>
+          <input name="roadblock" autocomplete="off">
+        </label>
+      </section>
+
+      <section class="field-group" aria-labelledby="proof-heading">
+        <div class="group-heading-row">
+          <h2 id="proof-heading">
+            <img src="https://conversionalchemy.b-cdn.net/App/trust.jpg" alt="Why it works" width="32" height="32">
+            Why it works
+          </h2>
+        </div>
+        <label class="field">
+          <span class="field-label"><img src="https://conversionalchemy.b-cdn.net/App/unique%20mech.jpg" alt="Unique mechanism" width="24" height="24">Unique mechanism <span>optional</span></span>
+          <span class="example">Example: adaptive dual-layer support</span>
+          <input name="mechanism" autocomplete="off">
+        </label>
+        <label class="field">
+          <span class="field-label"><img src="https://conversionalchemy.b-cdn.net/App/Most%20persuasive%20feature.jpg" alt="Most persuasive feature" width="24" height="24">Most persuasive feature <span>optional</span></span>
+          <span class="example">Example: adjustable loft</span>
+          <input name="feature" autocomplete="off">
+        </label>
+        <label class="field">
+          <span class="field-label"><img src="https://conversionalchemy.b-cdn.net/App/trust.jpg" alt="Proof or credibility" width="24" height="24">Proof or credibility <span>optional</span></span>
+          <span class="example">Example: trusted by 12,000+ sleepers</span>
+          <input name="proof" autocomplete="off">
+        </label>
+        <label class="field">
+          <span class="field-label"><img src="https://conversionalchemy.b-cdn.net/App/time.jpg" alt="Timeframe" width="24" height="24">Timeframe <span>optional</span></span>
+          <span class="example">Example: from the first night</span>
+          <input name="timeframe" autocomplete="off">
+        </label>
+        <label class="field">
+          <span class="field-label"><img src="https://conversionalchemy.b-cdn.net/App/routine.jpeg" alt="Simple routine or use moment" width="24" height="24">Simple routine or use moment <span>optional</span></span>
+          <span class="example">Example: your nightly wind-down</span>
+          <input name="routine" autocomplete="off">
+        </label>
+        <label class="field">
+          <span class="field-label"><img src="https://conversionalchemy.b-cdn.net/App/Offer.jpg" alt="Offer" width="24" height="24">Offer <span>optional</span></span>
+          <span class="example">Example: Try it for 60 nights, risk-free</span>
+          <input name="offer" autocomplete="off">
+        </label>
+      </section>
+
+      <section class="field-group settings-group" aria-labelledby="settings-heading">
+        <div class="group-heading-row">
+          <h2 id="settings-heading">Output settings</h2>
+        </div>
+        <div class="setting">
+          <div class="setting-label"><label for="strictness">Match strictness</label><strong id="strictnessValue">Focused</strong></div>
+          <div class="range-wrap">
+            <span class="range-fill" aria-hidden="true"></span>
+            <input class="range-control" id="strictness" name="strictness" type="range" min="1" max="5" step="1" value="4">
+          </div>
+          <div class="range-ends"><span>Loose</span><span>Strict</span></div>
+        </div>
+        <div class="setting">
+          <div class="setting-label"><label for="maxWords">Maximum words</label><strong id="maxWordsValue">14</strong></div>
+          <div class="range-wrap">
+            <span class="range-fill" aria-hidden="true"></span>
+            <input class="range-control" id="maxWords" name="maxWords" type="range" min="4" max="20" step="1" value="14">
+          </div>
+          <div class="range-ends"><span>4</span><span>20</span></div>
+        </div>
+        <fieldset class="setting">
+          <legend>Deliverable</legend>
+          <div class="segmented-control">
+            <label><input type="radio" name="outputType" value="headline"><span>Headline only</span></label>
+            <label><input type="radio" name="outputType" value="pair" checked><span>Headline and subhead</span></label>
+          </div>
+        </fieldset>
+        <fieldset class="setting">
+          <legend>Preview width</legend>
+          <div class="segmented-control">
+            <label><input type="radio" name="device" value="mobile" checked><span>Mobile</span></label>
+            <label><input type="radio" name="device" value="desktop"><span>Desktop</span></label>
+          </div>
+        </fieldset>
+      </section>
+
+      <button class="primary-button" type="submit">Generate headline directions</button>
+    </form>
+
+    <section class="results-section" id="resultsSection" hidden>
+      <div class="results-heading">
+        <h2>Results</h2>
+        <p id="resultsSummary">Generated from your inputs.</p>
+      </div>
+      <div class="results-actions">
+        <button class="text-link" id="showFavorites" type="button" aria-pressed="false">Favorites only</button>
+        <button class="text-link" id="exportFavorites" type="button">Export favorites</button>
+      </div>
+      <div class="filter-row" id="filterRow" aria-label="Filter results"></div>
+      <div id="results" aria-live="polite"></div>
+      <div class="empty-state" id="emptyState" hidden>
+        <h2>No complete formula matches yet.</h2>
+        <p>Add more optional inputs or loosen the match strictness.</p>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <p>Your inputs stay on this device. No AI, account, or API is used.</p>
+    <button class="text-link" id="clearSaved" type="button">Clear saved data</button>
+  </footer>
+
+  <div class="status-message" id="toast" role="status" aria-live="polite"></div>
+  <script src="app.js"></script>
+</body>
+</html>
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="A private, rule-based headline generator built from proven conversion-copy frameworks.">
   <title>Scroll-Stopping Headline Builder</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
