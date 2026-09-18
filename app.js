@@ -1,9 +1,9 @@
 const FORMULAS = [
   { id: "p1", category: "promise", name: "Outcome without obstacle", required: ["outcome", "roadblock"], headline: "{outcome}—without {roadblock}", sub: "{product} uses {mechanism} to help {audience} {outcome}.", pair: "Promise + how it works" },
-  { id: "p2", category: "promise", name: "Product for outcome", required: ["product", "audience", "outcome"], headline: "The {product} that helps {audience} {outcome}", sub: "Made with {feature} for a simpler path to {outcome}.", pair: "Promise + benefit" },
-  { id: "p3", category: "promise", name: "Outcome starts here", required: ["outcome", "mechanism"], headline: "{outcome} starts with {mechanism}", sub: "Meet {product}, designed for {audience}.", pair: "Promise + mechanism" },
+  { id: "p2", category: "promise", name: "Product for outcome", required: ["product", "audience", "outcome"], headline: "The {product} for {audience}", sub: "{outcome}, with {feature}.", pair: "Promise + benefit" },
+  { id: "p3", category: "promise", name: "Outcome starts here", required: ["outcome", "mechanism"], headline: "{outcome|ing} starts with {mechanism}", sub: "Meet {product}, designed for {audience}.", pair: "Promise + mechanism" },
   { id: "p4", category: "promise", name: "Finally without", required: ["outcome", "alternative"], headline: "Finally, {outcome} without {alternative}", sub: "{mechanism} helps {audience} get there with less friction.", pair: "Promise + relief" },
-  { id: "p5", category: "promise", name: "How to in a timeframe", required: ["audience", "outcome", "timeframe"], headline: "How {audience} can {outcome} {timeframe}", sub: "{product} makes it possible with {mechanism}.", pair: "Promise + timeframe" },
+  { id: "p5", category: "promise", name: "How to in a timeframe", required: ["audience", "outcome", "timeframe"], headline: "How to {outcome} {timeframe}", sub: "{mechanism}, built for {audience}.", pair: "Promise + timeframe" },
   { id: "p6", category: "promise", name: "Simpler way", required: ["outcome"], headline: "A simpler way to {outcome}", sub: "{product} combines {feature} with {mechanism}.", pair: "Promise + process" },
   { id: "p7", category: "promise", name: "Everything you need", required: ["outcome"], headline: "Everything you need to {outcome}", sub: "Built for {audience}, with {feature} where it matters.", pair: "Promise + fit" },
   { id: "p8", category: "promise", name: "From pain to outcome", required: ["pain", "outcome"], headline: "From {pain} to {outcome}", sub: "Discover how {product} uses {mechanism} to change the experience.", pair: "Before + after" },
@@ -11,17 +11,17 @@ const FORMULAS = [
   { id: "n1", category: "pain", name: "Tired of the problem", required: ["pain", "product"], headline: "Tired of {pain}? Try {product}", sub: "{mechanism} helps {audience} {outcome}.", pair: "Pain + solution" },
   { id: "n2", category: "pain", name: "Stop the problem", required: ["pain", "roadblock"], headline: "Stop {pain} without {roadblock}", sub: "{product} uses {mechanism} to help you {outcome}.", pair: "Pain + reassurance" },
   { id: "n3", category: "pain", name: "Why it keeps happening", required: ["pain", "mechanism"], headline: "Why {pain} keeps happening—and what to do instead", sub: "{mechanism} gives {audience} a better path to {outcome}.", pair: "Pain + education" },
-  { id: "n4", category: "pain", name: "No more trade-off", required: ["alternative", "roadblock", "outcome"], headline: "No {alternative}. No {roadblock}. Just {outcome}.", sub: "Meet {product}, made for {audience}.", pair: "Frustration + relief" },
+  { id: "n4", category: "pain", name: "No more trade-off", required: ["alternative", "roadblock", "outcome"], headline: "No {alternative}. Just {outcome}.", sub: "{mechanism}.", pair: "Frustration + relief" },
 
   { id: "r1", category: "proof", name: "Proof first", required: ["proof", "outcome"], headline: "{proof}: a better way to {outcome}", sub: "See how {product} turns {mechanism} into a practical advantage.", pair: "Proof + promise" },
   { id: "r2", category: "proof", name: "Outcome backed by proof", required: ["outcome", "proof"], headline: "{outcome}, backed by {proof}", sub: "{product} was designed for {audience} using {mechanism}.", pair: "Promise + proof" },
   { id: "r3", category: "proof", name: "Proof and counting", required: ["proof", "product"], headline: "{proof}—and counting. Discover {product}", sub: "A more believable way for {audience} to {outcome}.", pair: "Proof + product" },
   { id: "r4", category: "proof", name: "Pain plus proof", required: ["pain", "proof"], headline: "Still dealing with {pain}? {proof}", sub: "{product} helps through {mechanism}.", pair: "Pain + proof" },
 
-  { id: "m1", category: "mechanism", name: "Mechanism behind outcome", required: ["mechanism", "outcome"], headline: "The {mechanism} behind {outcome}", sub: "Inside {product}: {feature}, designed for {audience}.", pair: "Mechanism + feature" },
+  { id: "m1", category: "mechanism", name: "Mechanism behind outcome", required: ["mechanism", "outcome"], headline: "The {mechanism} behind {outcome|ing}", sub: "Inside {product}: {feature}, designed for {audience}.", pair: "Mechanism + feature" },
   { id: "m2", category: "mechanism", name: "Smarter way", required: ["mechanism", "outcome"], headline: "{mechanism}: the smarter way to {outcome}", sub: "Created for {audience} who are done with {alternative}.", pair: "Mechanism + contrast" },
-  { id: "m3", category: "mechanism", name: "Feature for outcome", required: ["feature", "outcome"], headline: "{feature} for {outcome}", sub: "It’s how {product} helps {audience} move beyond {pain}.", pair: "Feature + benefit" },
-  { id: "m4", category: "mechanism", name: "Meet the product", required: ["product", "outcome"], headline: "Meet {product}: {outcome} made simpler", sub: "The difference is {mechanism}.", pair: "Product + process" },
+  { id: "m3", category: "mechanism", name: "Feature for outcome", required: ["feature", "outcome"], headline: "{feature} for {outcome|ing}", sub: "It’s how {product} helps {audience} move beyond {pain}.", pair: "Feature + benefit" },
+  { id: "m4", category: "mechanism", name: "Meet the product", required: ["product", "outcome"], headline: "Meet {product}: {outcome|ing} made simpler", sub: "The difference is {mechanism}.", pair: "Product + process" },
   { id: "m5", category: "mechanism", name: "Built to", required: ["product", "outcome"], headline: "{product}: built to help you {outcome}", sub: "Get there with {feature} and {mechanism}.", pair: "Product + benefit" },
 
   { id: "o1", category: "offer", name: "Offer first", required: ["offer", "outcome"], headline: "{offer}—and start to {outcome}", sub: "Try {product}, made for {audience} with {mechanism}.", pair: "Offer + promise" },
@@ -33,8 +33,39 @@ const FORMULAS = [
   { id: "i2", category: "identity", name: "If this is you", required: ["audience", "pain"], headline: "If you’re {audience} and tired of {pain}, start here", sub: "{product} helps you {outcome} with {mechanism}.", pair: "Identity + pain" },
   { id: "i3", category: "identity", name: "What if", required: ["outcome", "roadblock"], headline: "What if you could {outcome} without {roadblock}?", sub: "That’s why {product} uses {mechanism}.", pair: "Question + reason" },
   { id: "i4", category: "identity", name: "Waiting for", required: ["product", "audience"], headline: "The {product} {audience} have been waiting for", sub: "Designed to help you {outcome}, with {feature} built in.", pair: "Identity + product" },
-  { id: "i5", category: "identity", name: "Switching from", required: ["audience", "alternative", "product"], headline: "Why {audience} are switching from {alternative} to {product}", sub: "The difference: {mechanism}, plus {proof}.", pair: "Identity + contrast" },
-  { id: "i6", category: "identity", name: "Routine route", required: ["routine", "outcome"], headline: "Make {routine} your route to {outcome}", sub: "Add {product} for {feature} that fits your day.", pair: "Routine + promise" }
+  { id: "i5", category: "identity", name: "Switching from", required: ["audience", "alternative", "product"], headline: "Why {audience} are switching", sub: "{mechanism}, plus {proof}.", pair: "Identity + contrast" },
+  { id: "i6", category: "identity", name: "Routine route", required: ["routine", "outcome"], headline: "Make {routine} your route to {outcome}", sub: "Add {product} for {feature} that fits your day.", pair: "Routine + promise" },
+
+  { id: "s1", category: "promise", name: "Outcome, full stop", required: ["outcome", "roadblock"], headline: "{outcome}. Without {roadblock}.", sub: "{mechanism}.", pair: "Promise + how it works" },
+  { id: "s2", category: "promise", name: "Outcome without the usual", required: ["outcome", "alternative"], headline: "{outcome}. Without {alternative}.", sub: "{offer}.", pair: "Alternative + offer" },
+  { id: "s3", category: "promise", name: "The secret to", required: ["outcome"], headline: "The secret to {outcome|ing}", subs: ["{mechanism}.", "{mechanism}. {proof}."], pair: "Curiosity + reveal" },
+  { id: "s4", category: "promise", name: "Outcome by when", required: ["outcome", "timeframe"], headline: "{outcome}, {timeframe}", sub: "{mechanism}.", pair: "Promise + timeframe" },
+  { id: "s5", category: "identity", name: "Who else wants", required: ["outcome"], headline: "Who else wants to {outcome}?", sub: "{proof}.", pair: "Question + proof" },
+  { id: "s6", category: "identity", name: "To those who want", required: ["audience", "outcome"], headline: "To {audience} who want to {outcome}", sub: "{mechanism}.", pair: "Identity + process" },
+  { id: "s7", category: "identity", name: "Outcome for audience", required: ["outcome", "audience"], headline: "{outcome}, for {audience}", sub: "{mechanism}.", pair: "Promise + fit" },
+  { id: "s8", category: "pain", name: "Tired of it", required: ["pain"], headline: "Tired of {pain}?", subs: ["{proof}.", "{mechanism}.", "{offer}."], pair: "Pain + proof" },
+  { id: "s9", category: "pain", name: "The end of", required: ["pain"], headline: "The end of {pain}", sub: "{mechanism}.", pair: "Pain + process" },
+  { id: "s10", category: "pain", name: "Still dealing with it", required: ["pain"], headline: "Still {pain}?", sub: "{offer}.", pair: "Pain + offer" },
+  { id: "s11", category: "pain", name: "Why bother", required: ["alternative"], headline: "Why {alternative}?", sub: "{product} uses {mechanism}.", pair: "Alternative + process" },
+  { id: "s12", category: "proof", name: "Proof alone", required: ["proof"], headline: "{proof}", sub: "{outcome}, {timeframe}.", pair: "Proof + promise" },
+  { id: "s13", category: "proof", name: "Thousands now", required: ["outcome"], headline: "Thousands now {outcome}", sub: "{proof}.", pair: "Social proof + promise" },
+  { id: "s14", category: "mechanism", name: "Feature, full stop", required: ["feature", "outcome"], headline: "{feature}. {outcome}.", sub: "{mechanism}.", pair: "Feature + process" },
+
+  { id: "x1", category: "promise", name: "How to", required: ["outcome"], headline: "How to {outcome}", subs: ["{mechanism}.", "{feature}, built for {audience}.", "{mechanism}. {timeframe}."], pair: "Promise + process" },
+  { id: "x2", category: "promise", name: "Outcome, finally", required: ["outcome"], headline: "{outcome}. Finally.", subs: ["{mechanism}.", "{feature}, and nothing to learn.", "{mechanism}, {timeframe}."], pair: "Promise + process" },
+  { id: "x3", category: "promise", name: "Start now", required: ["outcome"], headline: "Start {outcome|ing}", sub: "{offer}.", pair: "Promise + offer" },
+  { id: "x4", category: "pain", name: "Stop it", required: ["pain"], headline: "Stop {pain}", subs: ["{mechanism}.", "{proof}.", "{mechanism}, {timeframe}."], pair: "Pain + process" },
+  { id: "x5", category: "pain", name: "Ends here", required: ["pain"], headline: "{pain} ends here", subs: ["{proof}.", "{mechanism}.", "{proof}. {offer}."], pair: "Pain + proof" },
+  { id: "x6", category: "pain", name: "Skip the alternative", required: ["alternative"], headline: "Skip {alternative}", subs: ["{mechanism}.", "{offer}.", "{mechanism}, {timeframe}."], pair: "Alternative + process" },
+  { id: "x7", category: "pain", name: "Truth about", required: ["alternative"], headline: "The truth about {alternative}", subs: ["{mechanism}.", "{mechanism}, which is why {product} works differently.", "{pain}. {mechanism}."], pair: "Curiosity + reveal" },
+  { id: "x8", category: "mechanism", name: "The difference", required: ["mechanism"], headline: "The difference: {mechanism}", sub: "{outcome}, {timeframe}.", pair: "Mechanism + promise" },
+  { id: "x9", category: "mechanism", name: "Why this product", required: ["product"], headline: "Why {product}?", subs: ["{mechanism}.", "{mechanism}. {proof}.", "{feature}, and {offer}."], pair: "Product + process" },
+  { id: "x10", category: "mechanism", name: "Feature alone", required: ["feature"], headline: "{feature}. Nothing else.", sub: "{mechanism}.", pair: "Feature + process" },
+  { id: "x11", category: "proof", name: "Proof, here is why", required: ["proof"], headline: "{proof}. Here’s why.", subs: ["{mechanism}.", "{mechanism}, so you {outcome}."], pair: "Proof + reveal" },
+  { id: "x12", category: "identity", name: "Built for", required: ["audience"], headline: "Built for {audience}", subs: ["{outcome}, with {mechanism}.", "{outcome}, {timeframe}.", "{outcome}. {proof}."], pair: "Identity + process" },
+  { id: "x13", category: "identity", name: "One change", required: ["routine"], headline: "One change: {routine}", sub: "{outcome}, {timeframe}.", pair: "Routine + promise" },
+  { id: "x14", category: "offer", name: "No catch", required: ["offer"], headline: "{offer}. No catch.", subs: ["{proof}.", "{proof}. {mechanism}.", "{mechanism}, so you {outcome}."], pair: "Offer + proof" },
+  { id: "x15", category: "promise", name: "Results by when", required: ["timeframe", "outcome"], headline: "Results {timeframe}", sub: "{outcome}, through {mechanism}.", pair: "Timeframe + promise" }
 ];
 
 const EXAMPLES = [
@@ -47,7 +78,7 @@ const EXAMPLES = [
   },
   {
     product: "Brewhaus Grind & Brew", audience: "people who buy coffee out every morning",
-    outcome: "café-quality coffee at home", pain: "weak, stale coffee from pre-ground beans",
+    outcome: "brew café-quality coffee at home", pain: "weak, stale coffee from pre-ground beans",
     alternative: "queuing at the coffee shop before work", roadblock: "another machine cluttering the counter",
     mechanism: "a built-in grinder that grinds fresh for every cup", feature: "automatic temperature control",
     proof: "rated 4.8 by 9,000 owners", timeframe: "from your first cup",
@@ -63,7 +94,7 @@ const EXAMPLES = [
   },
   {
     product: "Marlow Leather Weekender", audience: "people who want real leather without designer prices",
-    outcome: "premium leather without the markup", pain: "paying four figures for a logo",
+    outcome: "carry real leather without the markup", pain: "paying four figures for a logo",
     alternative: "designer bags at ten times the cost", roadblock: "buying leather online without handling it first",
     mechanism: "handcrafted in Italy from top-grain leather", feature: "ages into a darker patina",
     proof: "made in the same Tuscan workshop as designer labels", timeframe: "within a week of ordering",
@@ -71,7 +102,7 @@ const EXAMPLES = [
   },
   {
     product: "Second Skin Daily Moisturiser", audience: "people tired of complicated skincare",
-    outcome: "softer, smoother skin", pain: "skin that feels tight by midday",
+    outcome: "get softer, smoother skin", pain: "skin that feels tight by midday",
     alternative: "a 10-step routine that takes twenty minutes", roadblock: "another bottle on an already full shelf",
     mechanism: "a single hydrating base replacing serum, essence and cream",
     feature: "two pumps covers your whole face", proof: "dermatologist tested on sensitive skin",
@@ -89,7 +120,7 @@ const EXAMPLES = [
   },
   {
     product: "Lumen Clip-In Extensions", audience: "women who want fuller hair without a salon appointment",
-    outcome: "salon-quality hair at home", pain: "thin, flat hair that never holds volume",
+    outcome: "get salon-quality hair at home", pain: "thin, flat hair that never holds volume",
     alternative: "monthly salon visits and damaging glue", roadblock: "extensions that look obviously fake",
     mechanism: "seamless clip-in wefts matched to your shade", feature: "fits in under five minutes",
     proof: "over 40,000 sets sold", timeframe: "in under five minutes",
@@ -119,7 +150,7 @@ const AI_PROMPT = `Fill out this brief for my product. Reply with a JSON object 
 {
   "product": "the product or brand name",
   "audience": "who it is for, e.g. side sleepers",
-  "outcome": "the change they want, e.g. wake up without neck pain",
+  "outcome": "the change they want, starting with a verb, e.g. wake up without neck pain",
   "pain": "the main problem they have now",
   "alternative": "the frustrating thing they do instead",
   "roadblock": "their top objection to buying",
@@ -131,7 +162,7 @@ const AI_PROMPT = `Fill out this brief for my product. Reply with a JSON object 
   "offer": "the offer or guarantee, e.g. try it for 60 nights, risk-free"
 }
 
-Rules: write every value as a natural lowercase phrase, not a sentence. No adjectives without substance. Use real specifics, never invented numbers. Leave a value as an empty string if you genuinely do not know it. Only "product", "audience" and "outcome" are required.
+Rules: write every value as a natural lowercase phrase of about four words, not a sentence. "outcome" must start with a verb — "brew cafe-quality coffee at home", not "cafe-quality coffee at home". No adjectives without substance. Use real specifics, never invented numbers. Leave a value as an empty string if you genuinely do not know it. Only "product", "audience" and "outcome" are required.
 
 My product is:`;
 
@@ -204,6 +235,13 @@ const caret = document.querySelector("#caret");
 const generateButton = document.querySelector("#generateButton");
 let generated = [];
 let runToken = 0;
+let overLimit = 0;
+
+function withinLimits(item, data) {
+  if (data.includeHeadline && item.headline.length > data.maxChars) return false;
+  if (data.includeSubhead && item.subheadline.length > data.maxSubChars) return false;
+  return true;
+}
 
 function titleCaseStart(value) {
   const text = String(value || "").trim();
@@ -212,18 +250,56 @@ function titleCaseStart(value) {
 
 const SMALL_WORDS = new Set(["a","an","and","as","at","but","by","for","from","in","into","nor","of","on","onto","or","over","per","so","the","to","up","via","with","yet"]);
 
+function capitalizeWord(word) {
+  return word.split("-").map(part =>
+    part.replace(/^([^\p{L}]*)(\p{Ll})/u, (_, lead, letter) => lead + letter.toUpperCase())
+  ).join("-");
+}
+
 function titleCase(value) {
   const words = String(value || "").trim().split(/\s+/);
+  let sentenceStart = true;
   return words.map((word, index) => {
-    const bare = word.toLowerCase();
-    if (index > 0 && index < words.length - 1 && SMALL_WORDS.has(bare.replace(/[^a-z]/g, ""))) return bare;
-    return word.replace(/^([^A-Za-z]*)([a-z])/, (_, lead, letter) => lead + letter.toUpperCase());
+    const bare = word.toLowerCase().replace(/[^a-z]/g, "");
+    const small = SMALL_WORDS.has(bare);
+    const result = (sentenceStart || index === words.length - 1 || !small)
+      ? capitalizeWord(word)
+      : word.toLowerCase();
+    sentenceStart = /[.!?:;]["')\]]?$/.test(word);
+    return result;
   }).join(" ");
 }
 
 function sentenceCase(value) {
   const text = String(value || "").trim().replace(/[.!?]+$/, "");
   return text ? text[0].toLowerCase() + text.slice(1) : "";
+}
+
+const OUTCOME_VERBS = new Set(["absorb","add","avoid","beat","boost","break","brew","build","carry","clear","cook","cut","ditch","drop","earn","end","enjoy","escape","feel","fall","finish","fit","fix","forget","gain","get","give","go","grow","have","heal","hit","hold","keep","kick","know","learn","leave","lift","look","lose","love","lower","make","move","own","pay","play","prevent","protect","reach","reduce","relax","remove","replace","rest","save","see","sell","serve","sleep","slow","smooth","soften","solve","speed","spend","stay","stop","strengthen","take","train","travel","try","turn","understand","use","wake","walk","wash","wear","win","work","write"]);
+
+function isVerbPhrase(value) {
+  const words = String(value || "").trim().toLowerCase().split(/\s+/).map(w => w.replace(/[^a-z]/g, ""));
+  const first = /ly$/.test(words[0]) && words.length > 1 ? words[1] : words[0];
+  return OUTCOME_VERBS.has(first);
+}
+
+function needsVerbOutcome(formula) {
+  const text = `${formula.headline} ${formula.sub}`;
+  return /\{outcome\|ing\}/.test(text) || /\b(to|now|can|could|helps?|you|wants to)\s+\{outcome\}/i.test(text);
+}
+
+function gerund(value) {
+  const text = String(value || "").trim();
+  if (!text) return "";
+  const [first, ...rest] = text.split(/\s+/);
+  const word = first.toLowerCase();
+  if (/ing$/.test(word)) return text;
+  let stem;
+  if (/ie$/.test(word)) stem = word.slice(0, -2) + "y";
+  else if (/[^aeiou]e$/.test(word) && !/ee$/.test(word)) stem = word.slice(0, -1);
+  else if (/^[a-z]*[aeiou][^aeiouwxy]$/.test(word) && word.length <= 5) stem = word + word.slice(-1);
+  else stem = word;
+  return [stem + "ing", ...rest].join(" ");
 }
 
 function cleanText(value) {
@@ -241,7 +317,10 @@ function getInputs() {
 }
 
 function fill(template, data, headline = false) {
-  const resolved = template.replace(/\{(\w+)\}/g, (_, key) => data[key] || "")
+  const resolved = template.replace(/\{(\w+)(?:\|(\w+))?\}/g, (_, key, form) => {
+      const value = data[key] || "";
+      return form === "ing" ? gerund(value) : value;
+    })
     .replace(/\s+([,.;!?])/g, "$1")
     .replace(/\s{2,}/g, " ")
     .trim();
@@ -263,9 +342,17 @@ function canComplete(template, data) {
   return keys.every(key => data[key]);
 }
 
+function pickSub(formula, data) {
+  const options = formula.subs || [formula.sub];
+  const usable = options.filter(option => canComplete(option, data));
+  if (!usable.length) return null;
+  return usable[Math.floor(Math.random() * usable.length)];
+}
+
 function buildCandidate(formula, data) {
   const headline = fill(formula.headline, data, true);
-  const subheadline = canComplete(formula.sub, data) ? fill(formula.sub, data, false) : fallbackSubheadline(data);
+  const chosen = pickSub(formula, data);
+  const subheadline = chosen ? fill(chosen, data, false) : fallbackSubheadline(data);
   const words = headline.split(/\s+/).filter(Boolean).length;
   const chars = headline.length;
   const lineWidth = 28;
@@ -299,16 +386,20 @@ function generate(event) {
   if (!form.reportValidity()) return;
   const data = getInputs();
   saveForm(data);
-  const eligible = FORMULAS.filter(formula => hasAllRequired(formula, data));
+  const verbOk = isVerbPhrase(data.outcome);
+  const eligible = FORMULAS.filter(formula =>
+    hasAllRequired(formula, data) && (verbOk || !needsVerbOutcome(formula)));
   let threshold = FLOOR + Math.random() * (CEILING - FLOOR);
   let passing = eligible.filter(formula => fillRatio(formula, data) >= threshold);
   while (passing.length < MIN_RESULTS && threshold > 0) {
     threshold -= 0.1;
     passing = eligible.filter(formula => fillRatio(formula, data) >= threshold);
   }
-  generated = passing
-    .map(formula => buildCandidate(formula, data))
+  const built = passing.map(formula => buildCandidate(formula, data));
+  generated = built
+    .filter(item => withinLimits(item, data))
     .sort((a, b) => scoreCandidate(b) - scoreCandidate(a));
+  overLimit = built.length - generated.length;
   resultsSection.hidden = false;
   revealResults();
 }
@@ -326,7 +417,12 @@ function revealResults() {
   resultsEl.innerHTML = "";
   countEl.textContent = "(0)";
   emptyState.hidden = generated.length > 0;
-  if (!generated.length) return;
+  if (!generated.length) {
+    emptyState.querySelector("p").textContent = overLimit
+      ? `${overLimit} direction${overLimit === 1 ? " was" : "s were"} built but every one exceeded your character limits. Raise the limits or shorten your inputs.`
+      : "No formulas can be completed from these inputs. Add a mechanism, proof point, pain or offer.";
+    return;
+  }
   if (reduced) return renderResults();
 
   generateButton.disabled = true;
@@ -355,10 +451,9 @@ function scoreCandidate(item) {
   const passed = item.checks.filter(check => check.pass).length;
   const offerBoost = item.category === "offer" ? 1.5 : 0;
   const proofBoost = item.category === "proof" ? 1 : 0;
-  const lengthPenalty = Math.max(0, item.chars - item.data.maxChars) / 5;
-  const subPenalty = item.data.includeSubhead ? Math.max(0, item.subheadline.length - item.data.maxSubChars) / 20 : 0;
+  const shortBonus = (item.data.maxChars - item.chars) / 40;
   const roll = Math.random() * 1.2;
-  return passed + offerBoost + proofBoost + roll - lengthPenalty - subPenalty;
+  return passed + offerBoost + proofBoost + shortBonus + roll;
 }
 
 function renderResults() {
