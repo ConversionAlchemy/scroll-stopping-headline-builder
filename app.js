@@ -37,29 +37,188 @@ const FORMULAS = [
   { id: "i6", category: "identity", name: "Routine route", required: ["routine", "outcome"], headline: "Make {routine} your route to {outcome}", sub: "Add {product} for {feature} that fits your day.", pair: "Routine + promise" }
 ];
 
-const CATEGORY_NAMES = {
-  all: "All", promise: "Promise", pain: "Pain", proof: "Proof",
-  mechanism: "Mechanism", offer: "Offer", identity: "Customer"
+const EXAMPLES = [
+  {
+    product: "DreamCloud Pillow", audience: "side sleepers", outcome: "wake up without neck pain",
+    pain: "waking up with a stiff neck", alternative: "constantly flipping your pillow",
+    roadblock: "buying another expensive pillow", mechanism: "adaptive dual-layer support",
+    feature: "adjustable loft", proof: "trusted by 12,000+ sleepers", timeframe: "from the first night",
+    routine: "your nightly wind-down", offer: "Try it for 60 nights, risk-free"
+  },
+  {
+    product: "Brewhaus Grind & Brew", audience: "people who buy coffee out every morning",
+    outcome: "café-quality coffee at home", pain: "weak, stale coffee from pre-ground beans",
+    alternative: "queuing at the coffee shop before work", roadblock: "another machine cluttering the counter",
+    mechanism: "a built-in grinder that grinds fresh for every cup", feature: "automatic temperature control",
+    proof: "rated 4.8 by 9,000 owners", timeframe: "from your first cup",
+    routine: "your morning before work", offer: "Try it for 60 days, risk-free"
+  },
+  {
+    product: "Coolweave Sheet Set", audience: "hot sleepers", outcome: "stay cool through the night",
+    pain: "waking up sweating and kicking the covers off", alternative: "flipping to the cold side of the bed",
+    roadblock: "spending more on sheets that still trap heat",
+    mechanism: "long-staple cotton woven in breathable percale", feature: "stays cool to the touch",
+    proof: "reviewers finally sleep under the covers again", timeframe: "from the first night",
+    routine: "your nightly wind-down", offer: "Try them for 100 nights, with free returns"
+  },
+  {
+    product: "Marlow Leather Weekender", audience: "people who want real leather without designer prices",
+    outcome: "premium leather without the markup", pain: "paying four figures for a logo",
+    alternative: "designer bags at ten times the cost", roadblock: "buying leather online without handling it first",
+    mechanism: "handcrafted in Italy from top-grain leather", feature: "ages into a darker patina",
+    proof: "made in the same Tuscan workshop as designer labels", timeframe: "within a week of ordering",
+    routine: "your weekend packing", offer: "Try it for 100 days, with free returns"
+  },
+  {
+    product: "Second Skin Daily Moisturiser", audience: "people tired of complicated skincare",
+    outcome: "softer, smoother skin", pain: "skin that feels tight by midday",
+    alternative: "a 10-step routine that takes twenty minutes", roadblock: "another bottle on an already full shelf",
+    mechanism: "a single hydrating base replacing serum, essence and cream",
+    feature: "two pumps covers your whole face", proof: "dermatologist tested on sensitive skin",
+    timeframe: "within two weeks", routine: "right after cleansing, morning or night",
+    offer: "Try it for 30 days, money back"
+  },
+  {
+    product: "Rho Liquid Vitamins", audience: "people who take supplements and feel no difference",
+    outcome: "actually absorb what you pay for", pain: "expensive supplements that pass straight through you",
+    alternative: "swallowing a handful of capsules every morning", roadblock: "another supplement that does nothing",
+    mechanism: "liposomal spheres that shield nutrients during digestion",
+    feature: "10x higher absorption than capsules", proof: "trusted by 100,000+ customers",
+    timeframe: "within the first month", routine: "one spoonful with breakfast",
+    offer: "60-day money-back guarantee"
+  },
+  {
+    product: "Lumen Clip-In Extensions", audience: "women who want fuller hair without a salon appointment",
+    outcome: "salon-quality hair at home", pain: "thin, flat hair that never holds volume",
+    alternative: "monthly salon visits and damaging glue", roadblock: "extensions that look obviously fake",
+    mechanism: "seamless clip-in wefts matched to your shade", feature: "fits in under five minutes",
+    proof: "over 40,000 sets sold", timeframe: "in under five minutes",
+    routine: "your morning routine", offer: "Free returns within 30 days"
+  }
+];
+let exampleIndex = -1;
+let fillToken = 0;
+
+const FIELD_KEYS = ["product", "audience", "outcome", "pain", "alternative", "roadblock", "mechanism", "feature", "proof", "timeframe", "routine", "offer"];
+
+const FIELD_ALIASES = {
+  "product or brand": "product", "brand": "product",
+  "ideal customer": "audience", "customer": "audience",
+  "desired outcome": "outcome",
+  "main pain or problem": "pain", "pain point": "pain", "problem": "pain",
+  "frustrating alternative": "alternative",
+  "top objection or roadblock": "roadblock", "objection": "roadblock",
+  "unique mechanism": "mechanism",
+  "most persuasive feature": "feature",
+  "proof or credibility": "proof", "credibility": "proof",
+  "simple routine or use moment": "routine", "use moment": "routine"
 };
-const STRICTNESS_NAMES = ["Loose", "Flexible", "Balanced", "Focused", "Strict"];
-const STRICTNESS_THRESHOLDS = [0, 0.4, 0.55, 0.7, 1];
+
+const AI_PROMPT = `Fill out this brief for my product. Reply with a JSON object only: no explanation, no code fences, no extra keys.
+
+{
+  "product": "the product or brand name",
+  "audience": "who it is for, e.g. side sleepers",
+  "outcome": "the change they want, e.g. wake up without neck pain",
+  "pain": "the main problem they have now",
+  "alternative": "the frustrating thing they do instead",
+  "roadblock": "their top objection to buying",
+  "mechanism": "what makes it work, e.g. adaptive dual-layer support",
+  "feature": "the single most persuasive feature",
+  "proof": "a concrete credibility fact, e.g. trusted by 12,000+ sleepers",
+  "timeframe": "how fast results come, e.g. from the first night",
+  "routine": "when or how it is used, e.g. your nightly wind-down",
+  "offer": "the offer or guarantee, e.g. try it for 60 nights, risk-free"
+}
+
+Rules: write every value as a natural lowercase phrase, not a sentence. No adjectives without substance. Use real specifics, never invented numbers. Leave a value as an empty string if you genuinely do not know it. Only "product", "audience" and "outcome" are required.
+
+My product is:`;
+
+function parsePasted(raw) {
+  const text = String(raw || "").trim().replace(/^```[a-z]*\n?/i, "").replace(/```$/, "").trim();
+  if (!text) return null;
+  const out = {};
+
+  const start = text.indexOf("{");
+  const end = text.lastIndexOf("}");
+  if (start !== -1 && end > start) {
+    try {
+      const parsed = JSON.parse(text.slice(start, end + 1));
+      Object.entries(parsed).forEach(([key, value]) => {
+        const mapped = FIELD_ALIASES[String(key).toLowerCase().trim()] || String(key).toLowerCase().trim();
+        if (FIELD_KEYS.includes(mapped) && typeof value === "string") out[mapped] = value.trim();
+      });
+      if (Object.keys(out).length) return out;
+    } catch {}
+  }
+
+  text.split(/\n+/).forEach(line => {
+    const match = line.match(/^\s*[-*"]?\s*([A-Za-z ]+?)"?\s*[:=]\s*"?(.+?)"?,?\s*$/);
+    if (!match) return;
+    const mapped = FIELD_ALIASES[match[1].toLowerCase().trim()] || match[1].toLowerCase().trim();
+    if (FIELD_KEYS.includes(mapped)) out[mapped] = match[2].trim();
+  });
+
+  return Object.keys(out).length ? out : null;
+}
+
+function fillFields(data, label) {
+  const entries = FIELD_KEYS.filter(key => data[key]).map(key => [key, data[key]]);
+  const token = ++fillToken;
+  FIELD_KEYS.forEach(key => form.elements[key].value = "");
+
+  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+    entries.forEach(([key, value]) => form.elements[key].value = value);
+    saveForm();
+    return notify(label);
+  }
+
+  let index = 0;
+  const step = () => {
+    if (token !== fillToken) return;
+    const [key, value] = entries[index];
+    form.elements[key].value = value;
+    index += 1;
+    if (index < entries.length) {
+      setTimeout(step, 26 + Math.random() * 48);
+      return;
+    }
+    saveForm();
+    notify(label);
+  };
+  setTimeout(step, 40);
+}
+
+const FLOOR = 0.5;
+const CEILING = 0.85;
+const MIN_RESULTS = 6;
 
 const STORAGE_KEY = "ca-headline-builder-v1";
-const FAVORITES_KEY = "ca-headline-favorites-v1";
 const form = document.querySelector("#headlineForm");
 const resultsSection = document.querySelector("#resultsSection");
 const resultsEl = document.querySelector("#results");
 const emptyState = document.querySelector("#emptyState");
-const summaryEl = document.querySelector("#resultsSummary");
-const filterRow = document.querySelector("#filterRow");
-const favoritesButton = document.querySelector("#showFavorites");
+const countEl = document.querySelector("#resultsCount");
+const caret = document.querySelector("#caret");
+const generateButton = document.querySelector("#generateButton");
 let generated = [];
-let activeFilter = "all";
-let favoritesOnly = false;
+let runToken = 0;
 
 function titleCaseStart(value) {
   const text = String(value || "").trim();
   return text ? text[0].toUpperCase() + text.slice(1) : "";
+}
+
+const SMALL_WORDS = new Set(["a","an","and","as","at","but","by","for","from","in","into","nor","of","on","onto","or","over","per","so","the","to","up","via","with","yet"]);
+
+function titleCase(value) {
+  const words = String(value || "").trim().split(/\s+/);
+  return words.map((word, index) => {
+    const bare = word.toLowerCase();
+    if (index > 0 && index < words.length - 1 && SMALL_WORDS.has(bare.replace(/[^a-z]/g, ""))) return bare;
+    return word.replace(/^([^A-Za-z]*)([a-z])/, (_, lead, letter) => lead + letter.toUpperCase());
+  }).join(" ");
 }
 
 function sentenceCase(value) {
@@ -74,8 +233,10 @@ function cleanText(value) {
 function getInputs() {
   const data = Object.fromEntries(new FormData(form).entries());
   Object.keys(data).forEach(key => data[key] = cleanText(data[key]));
-  data.maxWords = Number(data.maxWords || 14);
-  data.strictness = Number(data.strictness || 4);
+  data.maxChars = Number(data.maxChars || 60);
+  data.maxSubChars = Number(data.maxSubChars || 140);
+  data.includeSubhead = document.querySelector("#includeSubhead").checked;
+  data.includeHeadline = document.querySelector("#includeHeadline").checked || !data.includeSubhead;
   return data;
 }
 
@@ -91,11 +252,10 @@ function hasAllRequired(formula, data) {
   return formula.required.every(key => data[key]);
 }
 
-function meetsStrictness(formula, data) {
+function fillRatio(formula, data) {
   const placeholders = [...new Set([...`${formula.headline} ${formula.sub}`.matchAll(/\{(\w+)\}/g)].map(match => match[1]))];
   const supplied = placeholders.filter(key => data[key]).length;
-  const ratio = placeholders.length ? supplied / placeholders.length : 1;
-  return ratio >= STRICTNESS_THRESHOLDS[data.strictness - 1];
+  return placeholders.length ? supplied / placeholders.length : 1;
 }
 
 function canComplete(template, data) {
@@ -108,11 +268,12 @@ function buildCandidate(formula, data) {
   const subheadline = canComplete(formula.sub, data) ? fill(formula.sub, data, false) : fallbackSubheadline(data);
   const words = headline.split(/\s+/).filter(Boolean).length;
   const chars = headline.length;
-  const lineWidth = data.device === "mobile" ? 28 : 48;
+  const lineWidth = 28;
   const lines = Math.max(1, Math.ceil(chars / lineWidth));
   const checks = [
-    { label: words <= data.maxWords ? `${words} words` : `${words} words—trim`, pass: words <= data.maxWords },
-    { label: `${lines} est. ${data.device} line${lines === 1 ? "" : "s"}`, pass: data.device === "mobile" ? lines <= 3 : lines <= 2 },
+    { label: chars <= data.maxChars ? `${chars} characters` : `${chars} characters—trim`, pass: chars <= data.maxChars },
+    { label: subheadline.length <= data.maxSubChars ? "Subheadline fits" : "Subheadline long", pass: !data.includeSubhead || subheadline.length <= data.maxSubChars },
+    { label: `${lines} est. mobile line${lines === 1 ? "" : "s"}`, pass: lines <= 3 },
     { label: includesAny(headline, [data.audience, data.pain, data.outcome]) ? "Relevant hook" : "Check relevance", pass: includesAny(headline, [data.audience, data.pain, data.outcome]) },
     { label: includesAny(`${headline} ${subheadline}`, [data.mechanism, data.proof, data.feature, data.offer]) ? "Reason to believe" : "Add belief support", pass: includesAny(`${headline} ${subheadline}`, [data.mechanism, data.proof, data.feature, data.offer]) }
   ];
@@ -133,72 +294,94 @@ function includesAny(haystack, values) {
   return values.filter(Boolean).some(value => source.includes(String(value).toLowerCase().replace(/[.!?]+$/, "")));
 }
 
-function getFavorites() {
-  try { return JSON.parse(localStorage.getItem(FAVORITES_KEY)) || {}; }
-  catch { return {}; }
-}
-
-function setFavorites(value) {
-  localStorage.setItem(FAVORITES_KEY, JSON.stringify(value));
-}
-
-function getFavoriteKey(item) {
-  return `${item.id}:${item.headline}`;
-}
-
 function generate(event) {
   event?.preventDefault();
   if (!form.reportValidity()) return;
   const data = getInputs();
   saveForm(data);
-  generated = FORMULAS
-    .filter(formula => hasAllRequired(formula, data) && meetsStrictness(formula, data))
+  const eligible = FORMULAS.filter(formula => hasAllRequired(formula, data));
+  let threshold = FLOOR + Math.random() * (CEILING - FLOOR);
+  let passing = eligible.filter(formula => fillRatio(formula, data) >= threshold);
+  while (passing.length < MIN_RESULTS && threshold > 0) {
+    threshold -= 0.1;
+    passing = eligible.filter(formula => fillRatio(formula, data) >= threshold);
+  }
+  generated = passing
     .map(formula => buildCandidate(formula, data))
     .sort((a, b) => scoreCandidate(b) - scoreCandidate(a));
-  activeFilter = "all";
-  favoritesOnly = false;
-  favoritesButton.setAttribute("aria-pressed", "false");
-  renderFilters();
-  renderResults();
   resultsSection.hidden = false;
+  revealResults();
+}
+
+function rowDelay(index) {
+  const base = Math.max(45, 230 - index * 14);
+  const jitter = Math.random() * 90;
+  const catch_ = index > 0 && index % 5 === 0 ? 260 + Math.random() * 180 : 0;
+  return base + jitter + catch_;
+}
+
+function revealResults() {
+  const token = ++runToken;
+  const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  resultsEl.innerHTML = "";
+  countEl.textContent = "(0)";
+  emptyState.hidden = generated.length > 0;
+  if (!generated.length) return;
+  if (reduced) return renderResults();
+
+  generateButton.disabled = true;
+  generateButton.classList.add("is-rolling");
+  caret.hidden = false;
+  let index = 0;
+
+  const step = () => {
+    if (token !== runToken) return;
+    resultsEl.insertAdjacentHTML("beforeend", cardTemplate(generated[index], index));
+    index += 1;
+    countEl.textContent = `(${index})`;
+    if (index < generated.length) {
+      setTimeout(step, rowDelay(index));
+      return;
+    }
+    caret.hidden = true;
+    generateButton.classList.remove("is-rolling");
+    generateButton.disabled = false;
+  };
+
+  setTimeout(step, 320);
 }
 
 function scoreCandidate(item) {
   const passed = item.checks.filter(check => check.pass).length;
   const offerBoost = item.category === "offer" ? 1.5 : 0;
   const proofBoost = item.category === "proof" ? 1 : 0;
-  const lengthPenalty = Math.max(0, item.words - item.data.maxWords);
-  return passed + offerBoost + proofBoost - lengthPenalty;
-}
-
-function renderFilters() {
-  const categories = ["all", ...new Set(generated.map(item => item.category))];
-  filterRow.innerHTML = categories.map(category => `<button class="filter-button" type="button" data-filter="${category}" aria-pressed="${category === activeFilter}">${CATEGORY_NAMES[category]}</button>`).join("");
+  const lengthPenalty = Math.max(0, item.chars - item.data.maxChars) / 5;
+  const subPenalty = item.data.includeSubhead ? Math.max(0, item.subheadline.length - item.data.maxSubChars) / 20 : 0;
+  const roll = Math.random() * 1.2;
+  return passed + offerBoost + proofBoost + roll - lengthPenalty - subPenalty;
 }
 
 function renderResults() {
-  const favorites = getFavorites();
-  const visible = generated.filter(item => {
-    const categoryMatch = activeFilter === "all" || item.category === activeFilter;
-    const favoriteMatch = !favoritesOnly || favorites[getFavoriteKey(item)];
-    return categoryMatch && favoriteMatch;
-  });
-  summaryEl.textContent = `${generated.length} complete direction${generated.length === 1 ? "" : "s"}, ranked by usefulness.`;
-  resultsEl.innerHTML = visible.map(cardTemplate).join("");
-  emptyState.hidden = visible.length > 0;
+  countEl.textContent = `(${generated.length})`;
+  resultsEl.innerHTML = generated.map((item, index) => cardTemplate(item, index)).join("");
+  emptyState.hidden = generated.length > 0;
 }
 
-function cardTemplate(item) {
-  const favorites = getFavorites();
-  const favorite = Boolean(favorites[getFavoriteKey(item)]);
-  const outputType = item.data.outputType;
-  const sub = outputType === "headline" ? "" : `<p class="subheadline-preview">${escapeHtml(item.subheadline)}</p>`;
-  return `<article class="result-card" data-id="${item.id}" data-device="${item.data.device}">
-    <div class="card-top"><p class="formula-label">${escapeHtml(sentenceLabel(item.name))} · ${escapeHtml(sentenceLabel(item.pair))}</p><button class="text-link favorite-button" type="button" data-action="favorite" aria-pressed="${favorite}">${favorite ? "Saved" : "Save"}</button></div>
-    <h2 class="headline-preview">${escapeHtml(item.headline)}</h2>
+function countsLabel(item) {
+  const parts = [];
+  if (item.data.includeHeadline) parts.push(item.chars);
+  if (item.data.includeSubhead) parts.push(item.subheadline.length);
+  return `${parts.join(", ")} Characters`;
+}
+
+function cardTemplate(item, index) {
+  const head = item.data.includeHeadline ? `<h2 class="headline-preview">${escapeHtml(titleCase(item.headline))}</h2>` : "";
+  const sub = item.data.includeSubhead ? `<p class="subheadline-preview">${escapeHtml(titleCase(item.subheadline))}</p>` : "";
+  return `<article class="result-card" data-id="${item.id}">
+    <p class="result-number">#${index + 1}</p>
+    ${head}
     ${sub}
-    <div class="checks">${item.checks.map(check => `<span class="check${check.pass ? "" : " warn"}">${escapeHtml(check.label)}</span>`).join("")}</div>
-    <div class="card-footer"><span class="counts">${item.words} words · ${item.chars} characters</span><div class="card-actions"><button class="result-action" type="button" data-action="edit">Edit</button><button class="result-action" type="button" data-action="copy">Copy</button></div></div>
+    <div class="card-footer"><span class="counts">${countsLabel(item)}</span><div class="card-actions"><button class="result-action" type="button" data-action="edit">Edit</button><button class="result-action" type="button" data-action="copy">Copy</button></div></div>
   </article>`;
 }
 
@@ -244,8 +427,9 @@ function notify(message) {
 }
 
 function copyItem(item) {
-  const lines = [item.headline];
-  if (item.data.outputType !== "headline") lines.push(item.subheadline);
+  const lines = [];
+  if (item.data.includeHeadline) lines.push(titleCase(item.headline));
+  if (item.data.includeSubhead) lines.push(titleCase(item.subheadline));
   navigator.clipboard.writeText(lines.join("\n\n")).then(() => notify("Copied to clipboard."));
 }
 
@@ -262,8 +446,9 @@ function toggleEditor(card, item) {
   const textarea = document.createElement("textarea");
   textarea.className = "editor";
   textarea.setAttribute("aria-label", "Edit headline and subheadline");
-  textarea.value = `${item.headline}\n${item.subheadline}`;
-  card.querySelector(".headline-preview").before(textarea);
+  textarea.value = `${titleCase(item.headline)}\n${titleCase(item.subheadline)}`;
+  const anchor = card.querySelector(".headline-preview") || card.querySelector(".subheadline-preview") || card.querySelector(".checks");
+  anchor.before(textarea);
   card.querySelector("[data-action='edit']").textContent = "Apply";
   textarea.focus();
 }
@@ -274,14 +459,6 @@ form.addEventListener("input", () => {
   saveForm();
 });
 
-filterRow.addEventListener("click", event => {
-  const button = event.target.closest("[data-filter]");
-  if (!button) return;
-  activeFilter = button.dataset.filter;
-  renderFilters();
-  renderResults();
-});
-
 resultsEl.addEventListener("click", event => {
   const button = event.target.closest("[data-action]");
   const card = event.target.closest(".result-card");
@@ -290,423 +467,110 @@ resultsEl.addEventListener("click", event => {
   if (!item) return;
   if (button.dataset.action === "copy") copyItem(item);
   if (button.dataset.action === "edit") toggleEditor(card, item);
-  if (button.dataset.action === "favorite") {
-    const favorites = getFavorites();
-    const key = getFavoriteKey(item);
-    if (favorites[key]) delete favorites[key];
-    else favorites[key] = { headline: item.headline, subheadline: item.subheadline, formula: item.name };
-    setFavorites(favorites);
-    renderResults();
-  }
 });
 
-favoritesButton.addEventListener("click", () => {
-  favoritesOnly = !favoritesOnly;
-  favoritesButton.setAttribute("aria-pressed", String(favoritesOnly));
-  renderResults();
-});
-
-document.querySelector("#exportFavorites").addEventListener("click", () => {
-  const favorites = Object.values(getFavorites());
-  if (!favorites.length) return notify("Favorite at least one direction first.");
-  const content = favorites.map((item, index) => `${index + 1}. ${item.headline}\n${item.subheadline}\nFormula: ${item.formula}`).join("\n\n");
-  const blob = new Blob([content], { type: "text/plain" });
-  const link = document.createElement("a");
-  link.href = URL.createObjectURL(blob);
-  link.download = "headline-shortlist.txt";
-  link.click();
-  URL.revokeObjectURL(link.href);
-  notify("Favorites exported.");
+document.querySelector("#saveAll").addEventListener("click", () => {
+  if (!generated.length) return notify("Generate some directions first.");
+  window.print();
 });
 
 document.querySelector("#loadExample").addEventListener("click", () => {
-  const example = {
-    product: "DreamCloud Pillow", audience: "side sleepers", outcome: "wake up without neck pain",
-    pain: "waking up with a stiff neck", alternative: "constantly flipping your pillow",
-    mechanism: "adaptive dual-layer support", feature: "adjustable loft",
-    proof: "trusted by 12,000+ sleepers", timeframe: "from the first night",
-    roadblock: "buying another expensive pillow", routine: "your nightly wind-down",
-    offer: "Try it for 60 nights, risk-free"
-  };
-  Object.entries(example).forEach(([key, value]) => form.elements[key].value = value);
-  saveForm();
-  notify("Example loaded. Generate when ready.");
+  exampleIndex = (exampleIndex + 1) % EXAMPLES.length;
+  const example = EXAMPLES[exampleIndex];
+  fillFields(example, `Loaded ${example.product}. Example ${exampleIndex + 1} of ${EXAMPLES.length}.`);
 });
 
-document.querySelector("#resetAll").addEventListener("click", () => {
+const pasteDialog = document.querySelector("#pasteDialog");
+const pasteInput = document.querySelector("#pasteInput");
+const pasteError = document.querySelector("#pasteError");
+
+function currentAsCode() {
+  const data = getInputs();
+  const shape = {};
+  FIELD_KEYS.forEach(key => shape[key] = data[key] || "");
+  return JSON.stringify(shape, null, 2);
+}
+
+document.querySelector("#openPaste").addEventListener("click", () => {
+  pasteError.hidden = true;
+  pasteInput.value = currentAsCode();
+  pasteDialog.showModal();
+  document.body.classList.add("dialog-open");
+  pasteInput.focus();
+  pasteInput.setSelectionRange(0, 0);
+});
+
+pasteDialog.addEventListener("close", () => document.body.classList.remove("dialog-open"));
+
+pasteDialog.addEventListener("click", event => {
+  const box = pasteDialog.getBoundingClientRect();
+  const inside = event.clientX >= box.left && event.clientX <= box.right
+    && event.clientY >= box.top && event.clientY <= box.bottom;
+  if (!inside) pasteDialog.close();
+});
+
+document.querySelector("#closePaste").addEventListener("click", () => pasteDialog.close());
+
+document.querySelector("#copyPrompt").addEventListener("click", () => {
+  navigator.clipboard.writeText(AI_PROMPT).then(() => notify("AI instructions copied."));
+});
+
+document.querySelector("#applyPaste").addEventListener("click", () => {
+  const data = parsePasted(pasteInput.value);
+  if (!data) {
+    pasteError.textContent = "Could not read that. Paste the JSON object your AI returned, or one field per line as name: value.";
+    pasteError.hidden = false;
+    return;
+  }
+  const missing = ["product", "audience", "outcome"].filter(key => !data[key]);
+  if (missing.length) {
+    pasteError.textContent = `Missing required field${missing.length === 1 ? "" : "s"}: ${missing.join(", ")}.`;
+    pasteError.hidden = false;
+    return;
+  }
+  pasteDialog.close();
+  fillFields(data, `Filled ${Object.keys(data).length} fields from your AI.`);
+});
+
+function resetBuilder() {
   form.reset();
   updateSettingsDisplay();
   localStorage.removeItem(STORAGE_KEY);
   generated = [];
   resultsSection.hidden = true;
   notify("Builder reset.");
-});
+  window.scrollTo({ top: 0 });
+}
 
-document.querySelector("#clearSaved").addEventListener("click", () => {
-  localStorage.removeItem(STORAGE_KEY);
-  localStorage.removeItem(FAVORITES_KEY);
-  form.reset();
-  updateSettingsDisplay();
-  generated = [];
-  resultsSection.hidden = true;
-  notify("Saved inputs and favorites cleared.");
-});
+document.querySelector("#resetAll").addEventListener("click", resetBuilder);
+document.querySelector("#resetFooter").addEventListener("click", resetBuilder);
 
 restoreForm();
 updateSettingsDisplay();
 
 function updateSettingsDisplay() {
-  const strictness = document.querySelector("#strictness");
-  const maxWords = document.querySelector("#maxWords");
-  document.querySelector("#strictnessValue").textContent = STRICTNESS_NAMES[Number(strictness.value) - 1];
-  document.querySelector("#maxWordsValue").textContent = maxWords.value;
-  updateRangeProgress(strictness);
-  updateRangeProgress(maxWords);
+  const maxChars = document.querySelector("#maxChars");
+  const maxSubChars = document.querySelector("#maxSubChars");
+  document.querySelector("#maxCharsValue").textContent = maxChars.value;
+  document.querySelector("#maxSubCharsValue").textContent = maxSubChars.value;
+  updateRangeProgress(maxChars);
+  updateRangeProgress(maxSubChars);
+  document.querySelector("#headlineCharsSetting").hidden = !document.querySelector("#includeHeadline").checked;
+  document.querySelector("#subheadCharsSetting").hidden = !document.querySelector("#includeSubhead").checked;
 }
 
 function updateRangeProgress(input) {
   const progress = ((Number(input.value) - Number(input.min)) / (Number(input.max) - Number(input.min))) * 100;
   input.closest(".range-wrap").style.setProperty("--range-progress", `${progress}%`);
 }
-const FORMULAS = [
-  { id: "p1", category: "promise", name: "Outcome Without Obstacle", required: ["outcome", "roadblock"], headline: "{outcome}—Without {roadblock}", sub: "{product} uses {mechanism} to help {audience} {outcome}.", pair: "Promise + how it works" },
-  { id: "p2", category: "promise", name: "Product For Outcome", required: ["product", "audience", "outcome"], headline: "The {product} That Helps {audience} {outcome}", sub: "Made with {feature} for a simpler path to {outcome}.", pair: "Promise + benefit" },
-  { id: "p3", category: "promise", name: "Outcome Starts Here", required: ["outcome", "mechanism"], headline: "{outcome} Starts With {mechanism}", sub: "Meet {product}, designed for {audience}.", pair: "Promise + mechanism" },
-  { id: "p4", category: "promise", name: "Finally Without", required: ["outcome", "alternative"], headline: "Finally, {outcome} Without {alternative}", sub: "{mechanism} helps {audience} get there with less friction.", pair: "Promise + relief" },
-  { id: "p5", category: "promise", name: "How To In A Timeframe", required: ["audience", "outcome", "timeframe"], headline: "How {audience} Can {outcome} {timeframe}", sub: "{product} makes it possible with {mechanism}.", pair: "Promise + timeframe" },
-  { id: "p6", category: "promise", name: "Simpler Way", required: ["outcome"], headline: "A Simpler Way To {outcome}", sub: "{product} combines {feature} with {mechanism}.", pair: "Promise + process" },
-  { id: "p7", category: "promise", name: "Everything You Need", required: ["outcome"], headline: "Everything You Need To {outcome}", sub: "Built for {audience}, with {feature} where it matters.", pair: "Promise + fit" },
-  { id: "p8", category: "promise", name: "From Pain To Outcome", required: ["pain", "outcome"], headline: "From {pain} To {outcome}", sub: "Discover how {product} uses {mechanism} to change the experience.", pair: "Before + after" },
 
-  { id: "n1", category: "pain", name: "Tired Of The Problem", required: ["pain", "product"], headline: "Tired Of {pain}? Try {product}", sub: "{mechanism} helps {audience} {outcome}.", pair: "Pain + solution" },
-  { id: "n2", category: "pain", name: "Stop The Problem", required: ["pain", "roadblock"], headline: "Stop {pain} Without {roadblock}", sub: "{product} uses {mechanism} to help you {outcome}.", pair: "Pain + reassurance" },
-  { id: "n3", category: "pain", name: "Why It Keeps Happening", required: ["pain", "mechanism"], headline: "Why {pain} Keeps Happening—and What To Do Instead", sub: "{mechanism} gives {audience} a better path to {outcome}.", pair: "Pain + education" },
-  { id: "n4", category: "pain", name: "No More Trade-Off", required: ["alternative", "roadblock", "outcome"], headline: "No {alternative}. No {roadblock}. Just {outcome}.", sub: "Meet {product}, made for {audience}.", pair: "Frustration + relief" },
+const includeHeadline = document.querySelector("#includeHeadline");
+const includeSubhead = document.querySelector("#includeSubhead");
+[includeHeadline, includeSubhead].forEach(box => box.addEventListener("change", () => {
+  if (!includeHeadline.checked && !includeSubhead.checked) box.checked = true;
+  updateSettingsDisplay();
+}));
 
-  { id: "r1", category: "proof", name: "Proof First", required: ["proof", "outcome"], headline: "{proof}: A Better Way To {outcome}", sub: "See how {product} turns {mechanism} into a practical advantage.", pair: "Proof + promise" },
-  { id: "r2", category: "proof", name: "Outcome Backed By Proof", required: ["outcome", "proof"], headline: "{outcome}, Backed By {proof}", sub: "{product} was designed for {audience} using {mechanism}.", pair: "Promise + proof" },
-  { id: "r3", category: "proof", name: "Proof And Counting", required: ["proof", "product"], headline: "{proof}—And Counting. Discover {product}", sub: "A more believable way for {audience} to {outcome}.", pair: "Proof + product" },
-  { id: "r4", category: "proof", name: "Pain Plus Proof", required: ["pain", "proof"], headline: "Still Dealing With {pain}? {proof}", sub: "{product} helps through {mechanism}.", pair: "Pain + proof" },
-
-  { id: "m1", category: "mechanism", name: "Mechanism Behind Outcome", required: ["mechanism", "outcome"], headline: "The {mechanism} Behind {outcome}", sub: "Inside {product}: {feature}, designed for {audience}.", pair: "Mechanism + feature" },
-  { id: "m2", category: "mechanism", name: "Smarter Way", required: ["mechanism", "outcome"], headline: "{mechanism}: The Smarter Way To {outcome}", sub: "Created for {audience} who are done with {alternative}.", pair: "Mechanism + contrast" },
-  { id: "m3", category: "mechanism", name: "Feature For Outcome", required: ["feature", "outcome"], headline: "{feature} For {outcome}", sub: "It’s how {product} helps {audience} move beyond {pain}.", pair: "Feature + benefit" },
-  { id: "m4", category: "mechanism", name: "Meet The Product", required: ["product", "outcome"], headline: "Meet {product}: {outcome} Made Simpler", sub: "The difference is {mechanism}.", pair: "Product + process" },
-  { id: "m5", category: "mechanism", name: "Built To", required: ["product", "outcome"], headline: "{product}: Built To Help You {outcome}", sub: "Get there with {feature} and {mechanism}.", pair: "Product + benefit" },
-
-  { id: "o1", category: "offer", name: "Offer First", required: ["offer", "outcome"], headline: "{offer}—And Start To {outcome}", sub: "Try {product}, made for {audience} with {mechanism}.", pair: "Offer + promise" },
-  { id: "o2", category: "offer", name: "Reassuring Offer", required: ["alternative", "offer"], headline: "Done With {alternative}? {offer}", sub: "See how {product} helps {audience} {outcome}.", pair: "Frustration + offer" },
-  { id: "o3", category: "offer", name: "Try It For Yourself", required: ["product", "offer"], headline: "Try {product} For Yourself", sub: "{offer}. Experience {mechanism} on your way to {outcome}.", pair: "Product + offer" },
-  { id: "o4", category: "offer", name: "Offer With Proof", required: ["offer", "proof"], headline: "{offer}", sub: "Join {proof} and discover a more credible way to {outcome}.", pair: "Offer + proof" },
-
-  { id: "i1", category: "identity", name: "Designed For", required: ["audience", "outcome"], headline: "Designed For {audience} Who Want To {outcome}", sub: "{product} delivers through {mechanism}.", pair: "Identity + mechanism" },
-  { id: "i2", category: "identity", name: "If This Is You", required: ["audience", "pain"], headline: "If You’re {audience} And Tired Of {pain}, Start Here", sub: "{product} helps you {outcome} with {mechanism}.", pair: "Identity + pain" },
-  { id: "i3", category: "identity", name: "What If", required: ["outcome", "roadblock"], headline: "What If You Could {outcome} Without {roadblock}?", sub: "That’s why {product} uses {mechanism}.", pair: "Question + reason" },
-  { id: "i4", category: "identity", name: "Waiting For", required: ["product", "audience"], headline: "The {product} {audience} Have Been Waiting For", sub: "Designed to help you {outcome}, with {feature} built in.", pair: "Identity + product" },
-  { id: "i5", category: "identity", name: "Switching From", required: ["audience", "alternative", "product"], headline: "Why {audience} Are Switching From {alternative} To {product}", sub: "The difference: {mechanism}, plus {proof}.", pair: "Identity + contrast" },
-  { id: "i6", category: "identity", name: "Routine Route", required: ["routine", "outcome"], headline: "Make {routine} Your Route To {outcome}", sub: "Add {product} for {feature} that fits your day.", pair: "Routine + promise" }
-];
-
-const CATEGORY_NAMES = {
-  all: "All", promise: "Promise", pain: "Pain", proof: "Proof",
-  mechanism: "Mechanism", offer: "Offer", identity: "Customer"
-};
-
-const STORAGE_KEY = "ca-headline-builder-v1";
-const FAVORITES_KEY = "ca-headline-favorites-v1";
-const form = document.querySelector("#headlineForm");
-const resultsSection = document.querySelector("#resultsSection");
-const resultsEl = document.querySelector("#results");
-const emptyState = document.querySelector("#emptyState");
-const summaryEl = document.querySelector("#resultsSummary");
-const filterRow = document.querySelector("#filterRow");
-const favoritesButton = document.querySelector("#showFavorites");
-let generated = [];
-let activeFilter = "all";
-let favoritesOnly = false;
-
-function titleCaseStart(value) {
-  const text = String(value || "").trim();
-  return text ? text[0].toUpperCase() + text.slice(1) : "";
-}
-
-function sentenceCase(value) {
-  const text = String(value || "").trim().replace(/[.!?]+$/, "");
-  return text ? text[0].toLowerCase() + text.slice(1) : "";
-}
-
-function cleanText(value) {
-  return String(value || "").trim().replace(/\s+/g, " ");
-}
-
-function getInputs() {
-  const data = Object.fromEntries(new FormData(form).entries());
-  Object.keys(data).forEach(key => data[key] = cleanText(data[key]));
-  data.maxWords = Number(data.maxWords || 14);
-  return data;
-}
-
-function fill(template, data, headline = false) {
-  const resolved = template.replace(/\{(\w+)\}/g, (_, key) => data[key] || "")
-    .replace(/\s+([,.;!?])/g, "$1")
-    .replace(/\s{2,}/g, " ")
-    .trim();
-  return headline ? titleCaseStart(resolved) : resolved;
-}
-
-function hasAllRequired(formula, data) {
-  return formula.required.every(key => data[key]);
-}
-
-function canComplete(template, data) {
-  const keys = [...template.matchAll(/\{(\w+)\}/g)].map(match => match[1]);
-  return keys.every(key => data[key]);
-}
-
-function buildCandidate(formula, data) {
-  const headline = fill(formula.headline, data, true);
-  const subheadline = canComplete(formula.sub, data) ? fill(formula.sub, data, false) : fallbackSubheadline(data);
-  const words = headline.split(/\s+/).filter(Boolean).length;
-  const chars = headline.length;
-  const lineWidth = data.device === "mobile" ? 28 : 48;
-  const lines = Math.max(1, Math.ceil(chars / lineWidth));
-  const checks = [
-    { label: words <= data.maxWords ? `${words} words` : `${words} words—trim`, pass: words <= data.maxWords },
-    { label: `${lines} est. ${data.device} line${lines === 1 ? "" : "s"}`, pass: data.device === "mobile" ? lines <= 3 : lines <= 2 },
-    { label: includesAny(headline, [data.audience, data.pain, data.outcome]) ? "Relevant hook" : "Check relevance", pass: includesAny(headline, [data.audience, data.pain, data.outcome]) },
-    { label: includesAny(`${headline} ${subheadline}`, [data.mechanism, data.proof, data.feature, data.offer]) ? "Reason to believe" : "Add belief support", pass: includesAny(`${headline} ${subheadline}`, [data.mechanism, data.proof, data.feature, data.offer]) }
-  ];
-  return { ...formula, headline, subheadline, words, chars, lines, checks, data };
-}
-
-function fallbackSubheadline(data) {
-  const parts = [];
-  if (data.product && data.audience) parts.push(`${data.product} is designed for ${data.audience}`);
-  if (data.mechanism) parts.push(`using ${sentenceCase(data.mechanism)}`);
-  else if (data.feature) parts.push(`with ${sentenceCase(data.feature)}`);
-  if (data.outcome) parts.push(`to help you ${sentenceCase(data.outcome)}`);
-  return parts.length ? `${parts.join(" ")}.` : "Add a mechanism or proof point to make the promise more believable.";
-}
-
-function includesAny(haystack, values) {
-  const source = haystack.toLowerCase();
-  return values.filter(Boolean).some(value => source.includes(String(value).toLowerCase().replace(/[.!?]+$/, "")));
-}
-
-function getFavorites() {
-  try { return JSON.parse(localStorage.getItem(FAVORITES_KEY)) || {}; }
-  catch { return {}; }
-}
-
-function setFavorites(value) {
-  localStorage.setItem(FAVORITES_KEY, JSON.stringify(value));
-}
-
-function getFavoriteKey(item) {
-  return `${item.id}:${item.headline}`;
-}
-
-function generate(event) {
-  event?.preventDefault();
-  if (!form.reportValidity()) return;
-  const data = getInputs();
-  saveForm(data);
-  generated = FORMULAS
-    .filter(formula => (data.category === "all" || formula.category === data.category) && hasAllRequired(formula, data))
-    .map(formula => buildCandidate(formula, data))
-    .sort((a, b) => scoreCandidate(b) - scoreCandidate(a));
-  activeFilter = "all";
-  favoritesOnly = false;
-  favoritesButton.setAttribute("aria-pressed", "false");
-  renderFilters();
-  renderResults();
-  resultsSection.hidden = false;
-  resultsSection.scrollIntoView({ behavior: "smooth", block: "start" });
-}
-
-function scoreCandidate(item) {
-  const passed = item.checks.filter(check => check.pass).length;
-  const offerBoost = item.category === "offer" ? 1.5 : 0;
-  const proofBoost = item.category === "proof" ? 1 : 0;
-  const lengthPenalty = Math.max(0, item.words - item.data.maxWords);
-  return passed + offerBoost + proofBoost - lengthPenalty;
-}
-
-function renderFilters() {
-  const categories = ["all", ...new Set(generated.map(item => item.category))];
-  filterRow.innerHTML = categories.map(category => `<button class="filter-button" type="button" data-filter="${category}" aria-pressed="${category === activeFilter}">${CATEGORY_NAMES[category]}</button>`).join("");
-}
-
-function renderResults() {
-  const favorites = getFavorites();
-  const visible = generated.filter(item => {
-    const categoryMatch = activeFilter === "all" || item.category === activeFilter;
-    const favoriteMatch = !favoritesOnly || favorites[getFavoriteKey(item)];
-    return categoryMatch && favoriteMatch;
-  });
-  const inputCategory = getInputs().category;
-  summaryEl.textContent = `${generated.length} complete direction${generated.length === 1 ? "" : "s"}${inputCategory === "all" ? ", ranked by usefulness." : ` in the ${CATEGORY_NAMES[inputCategory].toLowerCase()} family.`}`;
-  resultsEl.innerHTML = visible.map(cardTemplate).join("");
-  emptyState.hidden = visible.length > 0;
-}
-
-function cardTemplate(item) {
-  const favorites = getFavorites();
-  const favorite = Boolean(favorites[getFavoriteKey(item)]);
-  const outputType = item.data.outputType;
-  const hero = outputType === "hero" ? `<div class="hero-extra"><p><strong>CTA:</strong> ${escapeHtml(buildCta(item.data))}</p><p><strong>Image direction:</strong> ${escapeHtml(buildImageDirection(item.data))}</p></div>` : "";
-  const sub = outputType === "headline" ? "" : `<p class="subheadline-preview">${escapeHtml(item.subheadline)}</p>`;
-  return `<article class="result-card" data-id="${item.id}" data-device="${item.data.device}">
-    <div class="card-top"><p class="formula-label">${escapeHtml(item.name)} · ${escapeHtml(item.pair)}</p><button class="favorite-button" type="button" data-action="favorite" aria-label="${favorite ? "Remove from" : "Add to"} favorites" aria-pressed="${favorite}">${favorite ? "★" : "☆"}</button></div>
-    <h3 class="headline-preview">${escapeHtml(item.headline)}</h3>
-    ${sub}${hero}
-    <div class="checks">${item.checks.map(check => `<span class="check${check.pass ? "" : " warn"}">${escapeHtml(check.label)}</span>`).join("")}</div>
-    <div class="card-footer"><span class="counts">${item.words} words · ${item.chars} characters</span><div class="card-actions"><button class="small-button" type="button" data-action="edit">Edit</button><button class="small-button" type="button" data-action="copy">Copy</button></div></div>
-  </article>`;
-}
-
-function buildCta(data) {
-  if (data.offer) return data.offer.replace(/[.!?]+$/, "");
-  if (data.product) return `Shop ${data.product}`;
-  return "Explore the product";
-}
-
-function buildImageDirection(data) {
-  const subject = data.audience || "the customer";
-  const moment = data.routine ? `during ${sentenceCase(data.routine)}` : "using the product";
-  const result = data.outcome ? `; make ${sentenceCase(data.outcome)} visually obvious` : "";
-  return `Show ${subject} ${moment}${result}.`;
-}
-
-function escapeHtml(value) {
-  return String(value).replace(/[&<>'"]/g, char => ({"&":"&amp;","<":"&lt;",">":"&gt;","'":"&#039;",'"':"&quot;"}[char]));
-}
-
-function saveForm(data = getInputs()) {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
-}
-
-function restoreForm() {
-  try {
-    const data = JSON.parse(localStorage.getItem(STORAGE_KEY));
-    if (!data) return;
-    Object.entries(data).forEach(([key, value]) => {
-      if (form.elements[key]) form.elements[key].value = value;
-    });
-  } catch {}
-}
-
-function notify(message) {
-  const toast = document.querySelector("#toast");
-  toast.textContent = message;
-  toast.classList.add("show");
-  clearTimeout(notify.timer);
-  notify.timer = setTimeout(() => toast.classList.remove("show"), 2200);
-}
-
-function copyItem(item) {
-  const lines = [item.headline];
-  if (item.data.outputType !== "headline") lines.push(item.subheadline);
-  if (item.data.outputType === "hero") lines.push(`CTA: ${buildCta(item.data)}`, `Image direction: ${buildImageDirection(item.data)}`);
-  navigator.clipboard.writeText(lines.join("\n\n")).then(() => notify("Copied to clipboard."));
-}
-
-function toggleEditor(card, item) {
-  const existing = card.querySelector(".editor");
-  if (existing) {
-    const [headline, ...rest] = existing.value.split("\n");
-    item.headline = cleanText(headline) || item.headline;
-    if (rest.join(" ").trim()) item.subheadline = cleanText(rest.join(" "));
-    renderResults();
-    notify("Edit applied to this session.");
-    return;
-  }
-  const textarea = document.createElement("textarea");
-  textarea.className = "editor";
-  textarea.setAttribute("aria-label", "Edit headline and subheadline");
-  textarea.value = `${item.headline}\n${item.subheadline}`;
-  card.querySelector(".headline-preview").before(textarea);
-  card.querySelector("[data-action='edit']").textContent = "Apply";
-  textarea.focus();
-}
-
-form.addEventListener("submit", generate);
-form.addEventListener("input", () => saveForm());
-
-filterRow.addEventListener("click", event => {
-  const button = event.target.closest("[data-filter]");
-  if (!button) return;
-  activeFilter = button.dataset.filter;
-  renderFilters();
-  renderResults();
+document.querySelectorAll("img").forEach(image => {
+  image.addEventListener("error", () => { image.style.visibility = "hidden"; });
 });
-
-resultsEl.addEventListener("click", event => {
-  const button = event.target.closest("[data-action]");
-  const card = event.target.closest(".result-card");
-  if (!button || !card) return;
-  const item = generated.find(candidate => candidate.id === card.dataset.id);
-  if (!item) return;
-  if (button.dataset.action === "copy") copyItem(item);
-  if (button.dataset.action === "edit") toggleEditor(card, item);
-  if (button.dataset.action === "favorite") {
-    const favorites = getFavorites();
-    const key = getFavoriteKey(item);
-    if (favorites[key]) delete favorites[key];
-    else favorites[key] = { headline: item.headline, subheadline: item.subheadline, formula: item.name };
-    setFavorites(favorites);
-    renderResults();
-  }
-});
-
-favoritesButton.addEventListener("click", () => {
-  favoritesOnly = !favoritesOnly;
-  favoritesButton.setAttribute("aria-pressed", String(favoritesOnly));
-  renderResults();
-});
-
-document.querySelector("#exportFavorites").addEventListener("click", () => {
-  const favorites = Object.values(getFavorites());
-  if (!favorites.length) return notify("Favorite at least one direction first.");
-  const content = favorites.map((item, index) => `${index + 1}. ${item.headline}\n${item.subheadline}\nFormula: ${item.formula}`).join("\n\n");
-  const blob = new Blob([content], { type: "text/plain" });
-  const link = document.createElement("a");
-  link.href = URL.createObjectURL(blob);
-  link.download = "headline-shortlist.txt";
-  link.click();
-  URL.revokeObjectURL(link.href);
-  notify("Favorites exported.");
-});
-
-document.querySelector("#loadExample").addEventListener("click", () => {
-  const example = {
-    product: "DreamCloud Pillow", audience: "side sleepers", outcome: "wake up without neck pain",
-    pain: "waking up with a stiff neck", alternative: "constantly flipping your pillow",
-    mechanism: "adaptive dual-layer support", feature: "adjustable loft",
-    proof: "trusted by 12,000+ sleepers", timeframe: "from the first night",
-    roadblock: "buying another expensive pillow", routine: "your nightly wind-down",
-    offer: "Try it for 60 nights, risk-free"
-  };
-  Object.entries(example).forEach(([key, value]) => form.elements[key].value = value);
-  saveForm();
-  notify("Example loaded. Generate when ready.");
-});
-
-document.querySelector("#resetAll").addEventListener("click", () => {
-  form.reset();
-  localStorage.removeItem(STORAGE_KEY);
-  generated = [];
-  resultsSection.hidden = true;
-  notify("Builder reset.");
-});
-
-document.querySelector("#clearSaved").addEventListener("click", () => {
-  localStorage.removeItem(STORAGE_KEY);
-  localStorage.removeItem(FAVORITES_KEY);
-  form.reset();
-  generated = [];
-  resultsSection.hidden = true;
-  notify("Saved inputs and favorites cleared.");
-});
-
-restoreForm();

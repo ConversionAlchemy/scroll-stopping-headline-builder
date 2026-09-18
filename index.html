@@ -7,364 +7,150 @@
   <title>Scroll-stopping headline builder</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cabin+Condensed:wght@700&family=PT+Sans:wght@400;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cabin+Condensed:wght@700&family=PT+Sans:wght@400;700&family=PT+Serif:ital@0;1&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
   <header class="site-header">
     <a class="text-logo" href="#top">ConversionAlchemy.com</a>
-    <button class="text-link" id="resetAll" type="button">Reset</button>
   </header>
 
   <main id="top">
-    <h1>Build headlines that earn the next line.</h1>
+    <h1>Scroll-Stopping Headline Generator</h1>
 
     <form id="headlineForm">
       <section class="field-group" aria-labelledby="selling-heading">
         <div class="group-heading-row">
           <h2 id="selling-heading">
-            <img src="https://conversionalchemy.b-cdn.net/App/Your%20product.jpg" alt="What you are selling" width="32" height="32">
-            What you are selling
+            What You Are Selling
           </h2>
-          <button class="text-link" id="loadExample" type="button">Load example</button>
+          <p class="row-actions"><button class="text-link" id="resetAll" type="button">Reset</button> <span aria-hidden="true">•</span> <button class="text-link" id="loadExample" type="button">Load Example</button> <span aria-hidden="true">•</span> <button class="text-link" id="openPaste" type="button">Paste From AI</button></p>
         </div>
         <label class="field">
-          <span class="field-label"><img src="https://conversionalchemy.b-cdn.net/App/Your%20product.jpg" alt="Product or brand" width="24" height="24">Product or brand</span>
-          <span class="example">Example: DreamCloud Pillow</span>
-          <input name="product" required autocomplete="off">
+          <span class="field-label">Product Or Brand</span>
+          <span class="input-wrap"><img src="https://conversionalchemy.b-cdn.net/App/Your%20product.jpg" alt="Product or brand" width="24" height="24"><input name="product" placeholder="DreamCloud Pillow..." required autocomplete="off"></span>
         </label>
         <label class="field">
-          <span class="field-label"><img src="https://conversionalchemy.b-cdn.net/App/Ideal%20customer.jpg" alt="Ideal customer" width="24" height="24">Ideal customer</span>
-          <span class="example">Example: side sleepers</span>
-          <input name="audience" required autocomplete="off">
+          <span class="field-label">Ideal Customer</span>
+          <span class="input-wrap"><img src="https://conversionalchemy.b-cdn.net/App/Ideal%20customer.jpg" alt="Ideal customer" width="24" height="24"><input name="audience" placeholder="side sleepers..." required autocomplete="off"></span>
         </label>
         <label class="field">
-          <span class="field-label"><img src="https://conversionalchemy.b-cdn.net/App/Desired%20outcome.jpg" alt="Desired outcome" width="24" height="24">Desired outcome</span>
-          <span class="example">Example: wake up without neck pain</span>
-          <input name="outcome" required autocomplete="off">
+          <span class="field-label">Desired Outcome</span>
+          <span class="input-wrap"><img src="https://conversionalchemy.b-cdn.net/App/Desired%20outcome.jpg" alt="Desired outcome" width="24" height="24"><input name="outcome" placeholder="wake up without neck pain..." required autocomplete="off"></span>
         </label>
       </section>
 
       <section class="field-group" aria-labelledby="obstacles-heading">
         <div class="group-heading-row">
           <h2 id="obstacles-heading">
-            <img src="https://conversionalchemy.b-cdn.net/App/roadblock.jpg" alt="What is in the way" width="32" height="32">
-            What is in the way
+            What Is In The Way <span>(optional)</span>
           </h2>
         </div>
         <label class="field">
-          <span class="field-label"><img src="https://conversionalchemy.b-cdn.net/App/Main%20problem%20.jpg" alt="Main pain or problem" width="24" height="24">Main pain or problem <span>optional</span></span>
-          <span class="example">Example: waking up with a stiff neck</span>
-          <input name="pain" autocomplete="off">
+          <span class="field-label">Main Pain Or Problem</span>
+          <span class="input-wrap"><img src="https://conversionalchemy.b-cdn.net/App/Main%20problem%20.jpg" alt="Main pain or problem" width="24" height="24"><input name="pain" placeholder="waking up with a stiff neck..." autocomplete="off"></span>
         </label>
         <label class="field">
-          <span class="field-label"><img src="https://conversionalchemy.b-cdn.net/App/frustrating%20alternative.jpg" alt="Frustrating alternative" width="24" height="24">Frustrating alternative <span>optional</span></span>
-          <span class="example">Example: constantly flipping your pillow</span>
-          <input name="alternative" autocomplete="off">
+          <span class="field-label">Frustrating Alternative</span>
+          <span class="input-wrap"><img src="https://conversionalchemy.b-cdn.net/App/frustrating%20alternative.jpg" alt="Frustrating alternative" width="24" height="24"><input name="alternative" placeholder="constantly flipping your pillow..." autocomplete="off"></span>
         </label>
         <label class="field">
-          <span class="field-label"><img src="https://conversionalchemy.b-cdn.net/App/roadblock.jpg" alt="Top objection or roadblock" width="24" height="24">Top objection or roadblock <span>optional</span></span>
-          <span class="example">Example: buying another expensive pillow</span>
-          <input name="roadblock" autocomplete="off">
+          <span class="field-label">Top Objection Or Roadblock</span>
+          <span class="input-wrap"><img src="https://conversionalchemy.b-cdn.net/App/roadblock.jpg" alt="Top objection or roadblock" width="24" height="24"><input name="roadblock" placeholder="buying another expensive pillow..." autocomplete="off"></span>
         </label>
       </section>
 
       <section class="field-group" aria-labelledby="proof-heading">
         <div class="group-heading-row">
           <h2 id="proof-heading">
-            <img src="https://conversionalchemy.b-cdn.net/App/trust.jpg" alt="Why it works" width="32" height="32">
-            Why it works
+            Why It Works <span>(optional)</span>
           </h2>
         </div>
         <label class="field">
-          <span class="field-label"><img src="https://conversionalchemy.b-cdn.net/App/unique%20mech.jpg" alt="Unique mechanism" width="24" height="24">Unique mechanism <span>optional</span></span>
-          <span class="example">Example: adaptive dual-layer support</span>
-          <input name="mechanism" autocomplete="off">
+          <span class="field-label">Unique Mechanism</span>
+          <span class="input-wrap"><img src="https://conversionalchemy.b-cdn.net/App/unique%20mech.jpg" alt="Unique mechanism" width="24" height="24"><input name="mechanism" placeholder="adaptive dual-layer support..." autocomplete="off"></span>
         </label>
         <label class="field">
-          <span class="field-label"><img src="https://conversionalchemy.b-cdn.net/App/Most%20persuasive%20feature.jpg" alt="Most persuasive feature" width="24" height="24">Most persuasive feature <span>optional</span></span>
-          <span class="example">Example: adjustable loft</span>
-          <input name="feature" autocomplete="off">
+          <span class="field-label">Most Persuasive Feature</span>
+          <span class="input-wrap"><img src="https://conversionalchemy.b-cdn.net/App/Most%20persuasive%20feature.jpg" alt="Most persuasive feature" width="24" height="24"><input name="feature" placeholder="adjustable loft..." autocomplete="off"></span>
         </label>
         <label class="field">
-          <span class="field-label"><img src="https://conversionalchemy.b-cdn.net/App/trust.jpg" alt="Proof or credibility" width="24" height="24">Proof or credibility <span>optional</span></span>
-          <span class="example">Example: trusted by 12,000+ sleepers</span>
-          <input name="proof" autocomplete="off">
+          <span class="field-label">Proof Or Credibility</span>
+          <span class="input-wrap"><img src="https://conversionalchemy.b-cdn.net/App/trust.jpg" alt="Proof or credibility" width="24" height="24"><input name="proof" placeholder="trusted by 12,000+ sleepers..." autocomplete="off"></span>
         </label>
         <label class="field">
-          <span class="field-label"><img src="https://conversionalchemy.b-cdn.net/App/time.jpg" alt="Timeframe" width="24" height="24">Timeframe <span>optional</span></span>
-          <span class="example">Example: from the first night</span>
-          <input name="timeframe" autocomplete="off">
+          <span class="field-label">Timeframe</span>
+          <span class="input-wrap"><img src="https://conversionalchemy.b-cdn.net/App/time.jpg" alt="Timeframe" width="24" height="24"><input name="timeframe" placeholder="from the first night..." autocomplete="off"></span>
         </label>
         <label class="field">
-          <span class="field-label"><img src="https://conversionalchemy.b-cdn.net/App/routine.jpeg" alt="Simple routine or use moment" width="24" height="24">Simple routine or use moment <span>optional</span></span>
-          <span class="example">Example: your nightly wind-down</span>
-          <input name="routine" autocomplete="off">
+          <span class="field-label">Simple Routine Or Use Moment</span>
+          <span class="input-wrap"><img src="https://conversionalchemy.b-cdn.net/App/routine.jpeg" alt="Simple routine or use moment" width="24" height="24"><input name="routine" placeholder="your nightly wind-down..." autocomplete="off"></span>
         </label>
         <label class="field">
-          <span class="field-label"><img src="https://conversionalchemy.b-cdn.net/App/Offer.jpg" alt="Offer" width="24" height="24">Offer <span>optional</span></span>
-          <span class="example">Example: Try it for 60 nights, risk-free</span>
-          <input name="offer" autocomplete="off">
+          <span class="field-label">Offer</span>
+          <span class="input-wrap"><img src="https://conversionalchemy.b-cdn.net/App/Offer.jpg" alt="Offer" width="24" height="24"><input name="offer" placeholder="Try it for 60 nights, risk-free..." autocomplete="off"></span>
         </label>
       </section>
 
-      <section class="field-group settings-group" aria-labelledby="settings-heading">
-        <div class="group-heading-row">
-          <h2 id="settings-heading">Output settings</h2>
-        </div>
-        <div class="setting">
-          <div class="setting-label"><label for="strictness">Match strictness</label><strong id="strictnessValue">Focused</strong></div>
-          <div class="range-wrap">
-            <span class="range-fill" aria-hidden="true"></span>
-            <input class="range-control" id="strictness" name="strictness" type="range" min="1" max="5" step="1" value="4">
-          </div>
-          <div class="range-ends"><span>Loose</span><span>Strict</span></div>
-        </div>
-        <div class="setting">
-          <div class="setting-label"><label for="maxWords">Maximum words</label><strong id="maxWordsValue">14</strong></div>
-          <div class="range-wrap">
-            <span class="range-fill" aria-hidden="true"></span>
-            <input class="range-control" id="maxWords" name="maxWords" type="range" min="4" max="20" step="1" value="14">
-          </div>
-          <div class="range-ends"><span>4</span><span>20</span></div>
-        </div>
+      <section class="field-group settings-group" aria-label="Output settings">
         <fieldset class="setting">
-          <legend>Deliverable</legend>
-          <div class="segmented-control">
-            <label><input type="radio" name="outputType" value="headline"><span>Headline only</span></label>
-            <label><input type="radio" name="outputType" value="pair" checked><span>Headline and subhead</span></label>
+          <legend>Output</legend>
+          <div class="checkbox-row">
+            <label><input type="checkbox" name="includeHeadline" id="includeHeadline" checked> Headline</label>
+            <label><input type="checkbox" name="includeSubhead" id="includeSubhead" checked> Subheadline</label>
           </div>
         </fieldset>
-        <fieldset class="setting">
-          <legend>Preview width</legend>
-          <div class="segmented-control">
-            <label><input type="radio" name="device" value="mobile" checked><span>Mobile</span></label>
-            <label><input type="radio" name="device" value="desktop"><span>Desktop</span></label>
+        <div class="setting" id="headlineCharsSetting">
+          <div class="setting-label"><label for="maxChars">Maximum Headline Characters</label><strong id="maxCharsValue">60</strong></div>
+          <div class="range-wrap">
+            <span class="range-fill" aria-hidden="true"></span>
+            <input class="range-control" id="maxChars" name="maxChars" type="range" min="20" max="120" step="5" value="60">
           </div>
-        </fieldset>
+          <div class="range-ends"><span>20</span><span>120</span></div>
+        </div>
+        <div class="setting" id="subheadCharsSetting">
+          <div class="setting-label"><label for="maxSubChars">Maximum Subheadline Characters</label><strong id="maxSubCharsValue">140</strong></div>
+          <div class="range-wrap">
+            <span class="range-fill" aria-hidden="true"></span>
+            <input class="range-control" id="maxSubChars" name="maxSubChars" type="range" min="40" max="220" step="10" value="140">
+          </div>
+          <div class="range-ends"><span>40</span><span>220</span></div>
+        </div>
       </section>
 
-      <button class="primary-button" type="submit">Generate headline directions</button>
+      <button class="primary-button" id="generateButton" type="submit"><img src="https://conversionalchemy.b-cdn.net/App/Dice.png" alt="" width="20" height="20"><span class="button-label">Generate</span></button>
     </form>
 
     <section class="results-section" id="resultsSection" hidden>
       <div class="results-heading">
-        <h2>Results</h2>
-        <p id="resultsSummary">Generated from your inputs.</p>
+        <h2>Results <strong id="resultsCount">(0)</strong></h2>
+        <button class="text-link" id="saveAll" type="button">Save As PDF</button>
       </div>
-      <div class="results-actions">
-        <button class="text-link" id="showFavorites" type="button" aria-pressed="false">Favorites only</button>
-        <button class="text-link" id="exportFavorites" type="button">Export favorites</button>
-      </div>
-      <div class="filter-row" id="filterRow" aria-label="Filter results"></div>
-      <div id="results" aria-live="polite"></div>
-      <div class="empty-state" id="emptyState" hidden>
-        <h2>No complete formula matches yet.</h2>
-        <p>Add more optional inputs or loosen the match strictness.</p>
+      <div class="results-box">
+        <div id="results" aria-live="polite"></div>
+        <p class="caret" id="caret" aria-hidden="true" hidden>&#9613;</p>
+        <div class="empty-state" id="emptyState" hidden>
+          <p>No formulas can be completed from these inputs. Add a mechanism, proof point, pain or offer.</p>
+        </div>
       </div>
     </section>
   </main>
 
   <footer>
-    <p>Your inputs stay on this device. No AI, account, or API is used.</p>
-    <button class="text-link" id="clearSaved" type="button">Clear saved data</button>
+    <button class="text-link" id="resetFooter" type="button">Reset</button>
   </footer>
+
+  <dialog id="pasteDialog" aria-label="Form code">
+    <textarea id="pasteInput" rows="14" aria-label="Form code" spellcheck="false"></textarea>
+    <p class="paste-error" id="pasteError" hidden></p>
+    <div class="dialog-actions">
+      <button class="secondary-button" id="copyPrompt" type="button">Copy Instructions For AI</button>
+      <button class="secondary-button" id="closePaste" type="button">Cancel</button>
+      <button class="primary-button" id="applyPaste" type="button">Fill Form</button>
+    </div>
+  </dialog>
 
   <div class="status-message" id="toast" role="status" aria-live="polite"></div>
-  <script src="app.js"></script>
-</body>
-</html>
-<!doctype html>
-<html lang="en">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="A private, rule-based headline generator built from proven conversion-copy frameworks.">
-  <title>Scroll-Stopping Headline Builder</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=PT+Sans:wght@400;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css">
-</head>
-<body>
-  <header class="site-header">
-    <a class="brand" href="#top" aria-label="Scroll-Stopping Headline Builder home">
-      <span class="brand-mark" aria-hidden="true">CA</span>
-      <span>Conversion Alchemy</span>
-    </a>
-    <div class="header-actions">
-      <span class="privacy-note">Runs entirely in your browser</span>
-      <button class="button button-quiet" id="resetAll" type="button">Reset</button>
-    </div>
-  </header>
-
-  <main id="top">
-    <section class="intro">
-      <p class="eyebrow">Non-AI headline generator</p>
-      <h1>Build headlines that earn the next line.</h1>
-      <p class="lede">Turn your product research into clear, specific headline directions using proven formulas—without uploading customer data or waiting for a blank page to become useful.</p>
-      <div class="principles" aria-label="Core principles">
-        <span>Right attention</span><span>Clear promise</span><span>Reason to believe</span><span>Easy to scan</span>
-      </div>
-    </section>
-
-    <section class="workspace" aria-label="Headline builder">
-      <form class="builder-panel" id="headlineForm">
-        <div class="panel-heading">
-          <div>
-            <p class="step-label">Step 1</p>
-            <h2>Give the formulas something real to work with</h2>
-          </div>
-          <button class="text-button" id="loadExample" type="button">Load example</button>
-        </div>
-
-        <div class="field-grid">
-          <label class="field field-wide">
-            <span>Product or brand <b aria-hidden="true">*</b></span>
-            <input name="product" required placeholder="e.g. DreamCloud Pillow">
-          </label>
-          <label class="field">
-            <span>Ideal customer <b aria-hidden="true">*</b></span>
-            <input name="audience" required placeholder="e.g. side sleepers">
-          </label>
-          <label class="field">
-            <span>Desired outcome <b aria-hidden="true">*</b></span>
-            <input name="outcome" required placeholder="e.g. wake up without neck pain">
-          </label>
-          <label class="field">
-            <span>Main pain or problem</span>
-            <input name="pain" placeholder="e.g. waking up with a stiff neck">
-          </label>
-          <label class="field">
-            <span>Frustrating alternative</span>
-            <input name="alternative" placeholder="e.g. constantly flipping your pillow">
-          </label>
-          <label class="field">
-            <span>Unique mechanism</span>
-            <input name="mechanism" placeholder="e.g. adaptive dual-layer support">
-          </label>
-          <label class="field">
-            <span>Most persuasive feature</span>
-            <input name="feature" placeholder="e.g. adjustable loft">
-          </label>
-          <label class="field">
-            <span>Proof or credibility</span>
-            <input name="proof" placeholder="e.g. trusted by 12,000+ sleepers">
-          </label>
-          <label class="field">
-            <span>Timeframe</span>
-            <input name="timeframe" placeholder="e.g. from the first night">
-          </label>
-          <label class="field">
-            <span>Top objection or roadblock</span>
-            <input name="roadblock" placeholder="e.g. buying another expensive pillow">
-          </label>
-          <label class="field">
-            <span>Simple routine or use moment</span>
-            <input name="routine" placeholder="e.g. your nightly wind-down">
-          </label>
-          <label class="field field-wide">
-            <span>Offer</span>
-            <input name="offer" placeholder="e.g. Try it for 60 nights, risk-free">
-          </label>
-        </div>
-
-        <details class="settings">
-          <summary>Fine-tune the output</summary>
-          <div class="settings-grid">
-            <label class="field">
-              <span>Formula family</span>
-              <select name="category">
-                <option value="all">All strong matches</option>
-                <option value="promise">Promise-led</option>
-                <option value="pain">Pain-led</option>
-                <option value="proof">Proof-led</option>
-                <option value="mechanism">Mechanism-led</option>
-                <option value="offer">Offer-led</option>
-                <option value="identity">Customer-led</option>
-              </select>
-            </label>
-            <label class="field">
-              <span>Deliverable</span>
-              <select name="outputType">
-                <option value="pair">Headline + subheadline</option>
-                <option value="headline">Headline only</option>
-                <option value="hero">Complete hero direction</option>
-              </select>
-            </label>
-            <label class="field">
-              <span>Maximum words</span>
-              <input type="number" name="maxWords" min="4" max="24" value="14">
-            </label>
-            <label class="field">
-              <span>Preview width</span>
-              <select name="device">
-                <option value="mobile">Mobile-first</option>
-                <option value="desktop">Desktop</option>
-              </select>
-            </label>
-          </div>
-        </details>
-
-        <div class="form-footer">
-          <p><strong>Tip:</strong> Write inputs as natural phrases. Specific proof beats broad praise.</p>
-          <button class="button button-primary" type="submit">Generate headline directions</button>
-        </div>
-      </form>
-
-      <aside class="coach-card" aria-label="Writing coach">
-        <p class="step-label">Before you generate</p>
-        <h2>Use the research, not adjectives.</h2>
-        <ul>
-          <li><strong>Promise:</strong> What valuable change does the shopper want?</li>
-          <li><strong>Process:</strong> What makes the outcome believable?</li>
-          <li><strong>Proof:</strong> What concrete fact lowers skepticism?</li>
-          <li><strong>Fit:</strong> Who should immediately feel “this is for me”?</li>
-        </ul>
-        <p class="coach-note">The builder prioritizes formulas it can complete with your inputs. Empty fields are never replaced with invented claims.</p>
-      </aside>
-    </section>
-
-    <section class="results-section" id="resultsSection" hidden>
-      <div class="results-header">
-        <div>
-          <p class="step-label">Step 2</p>
-          <h2>Choose a direction worth testing</h2>
-          <p id="resultsSummary">Generated from your inputs.</p>
-        </div>
-        <div class="results-actions">
-          <button class="button button-quiet" id="showFavorites" type="button" aria-pressed="false">Favorites only</button>
-          <button class="button button-quiet" id="exportFavorites" type="button">Export favorites</button>
-        </div>
-      </div>
-      <div class="filter-row" id="filterRow" aria-label="Filter results"></div>
-      <div class="results-grid" id="results" aria-live="polite"></div>
-      <div class="empty-state" id="emptyState" hidden>
-        <h3>No complete formula matches yet.</h3>
-        <p>Add a mechanism, proof point, pain, alternative, or offer to unlock more useful directions.</p>
-      </div>
-    </section>
-
-    <section class="framework-section">
-      <div>
-        <p class="eyebrow">Built-in quality control</p>
-        <h2>A formula is a starting point—not permission to make weak claims.</h2>
-      </div>
-      <div class="framework-grid">
-        <article><span>01</span><h3>Hook the right attention</h3><p>Name the audience, problem, or outcome so the right shopper self-selects.</p></article>
-        <article><span>02</span><h3>Create desire</h3><p>Lead with the change customers want, not a list of product attributes.</p></article>
-        <article><span>03</span><h3>Give a reason to believe</h3><p>Support the promise with a mechanism, proof point, offer, or specific detail.</p></article>
-        <article><span>04</span><h3>Stay scannable</h3><p>Use the fewest words that preserve meaning and check the mobile line estimate.</p></article>
-      </div>
-    </section>
-  </main>
-
-  <footer>
-    <p>Your inputs stay on this device. No AI, account, or API is used.</p>
-    <button class="text-button" id="clearSaved" type="button">Clear saved data</button>
-  </footer>
-
-  <div class="toast" id="toast" role="status" aria-live="polite"></div>
   <script src="app.js"></script>
 </body>
 </html>
