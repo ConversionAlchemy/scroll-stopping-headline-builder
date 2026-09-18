@@ -1,0 +1,194 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="A private, rule-based headline generator built from proven conversion-copy frameworks.">
+  <title>Scroll-Stopping Headline Builder</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=PT+Sans:wght@400;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="site-header">
+    <a class="brand" href="#top" aria-label="Scroll-Stopping Headline Builder home">
+      <span class="brand-mark" aria-hidden="true">CA</span>
+      <span>Conversion Alchemy</span>
+    </a>
+    <div class="header-actions">
+      <span class="privacy-note">Runs entirely in your browser</span>
+      <button class="button button-quiet" id="resetAll" type="button">Reset</button>
+    </div>
+  </header>
+
+  <main id="top">
+    <section class="intro">
+      <p class="eyebrow">Non-AI headline generator</p>
+      <h1>Build headlines that earn the next line.</h1>
+      <p class="lede">Turn your product research into clear, specific headline directions using proven formulas—without uploading customer data or waiting for a blank page to become useful.</p>
+      <div class="principles" aria-label="Core principles">
+        <span>Right attention</span><span>Clear promise</span><span>Reason to believe</span><span>Easy to scan</span>
+      </div>
+    </section>
+
+    <section class="workspace" aria-label="Headline builder">
+      <form class="builder-panel" id="headlineForm">
+        <div class="panel-heading">
+          <div>
+            <p class="step-label">Step 1</p>
+            <h2>Give the formulas something real to work with</h2>
+          </div>
+          <button class="text-button" id="loadExample" type="button">Load example</button>
+        </div>
+
+        <div class="field-grid">
+          <label class="field field-wide">
+            <span>Product or brand <b aria-hidden="true">*</b></span>
+            <input name="product" required placeholder="e.g. DreamCloud Pillow">
+          </label>
+          <label class="field">
+            <span>Ideal customer <b aria-hidden="true">*</b></span>
+            <input name="audience" required placeholder="e.g. side sleepers">
+          </label>
+          <label class="field">
+            <span>Desired outcome <b aria-hidden="true">*</b></span>
+            <input name="outcome" required placeholder="e.g. wake up without neck pain">
+          </label>
+          <label class="field">
+            <span>Main pain or problem</span>
+            <input name="pain" placeholder="e.g. waking up with a stiff neck">
+          </label>
+          <label class="field">
+            <span>Frustrating alternative</span>
+            <input name="alternative" placeholder="e.g. constantly flipping your pillow">
+          </label>
+          <label class="field">
+            <span>Unique mechanism</span>
+            <input name="mechanism" placeholder="e.g. adaptive dual-layer support">
+          </label>
+          <label class="field">
+            <span>Most persuasive feature</span>
+            <input name="feature" placeholder="e.g. adjustable loft">
+          </label>
+          <label class="field">
+            <span>Proof or credibility</span>
+            <input name="proof" placeholder="e.g. trusted by 12,000+ sleepers">
+          </label>
+          <label class="field">
+            <span>Timeframe</span>
+            <input name="timeframe" placeholder="e.g. from the first night">
+          </label>
+          <label class="field">
+            <span>Top objection or roadblock</span>
+            <input name="roadblock" placeholder="e.g. buying another expensive pillow">
+          </label>
+          <label class="field">
+            <span>Simple routine or use moment</span>
+            <input name="routine" placeholder="e.g. your nightly wind-down">
+          </label>
+          <label class="field field-wide">
+            <span>Offer</span>
+            <input name="offer" placeholder="e.g. Try it for 60 nights, risk-free">
+          </label>
+        </div>
+
+        <details class="settings">
+          <summary>Fine-tune the output</summary>
+          <div class="settings-grid">
+            <label class="field">
+              <span>Formula family</span>
+              <select name="category">
+                <option value="all">All strong matches</option>
+                <option value="promise">Promise-led</option>
+                <option value="pain">Pain-led</option>
+                <option value="proof">Proof-led</option>
+                <option value="mechanism">Mechanism-led</option>
+                <option value="offer">Offer-led</option>
+                <option value="identity">Customer-led</option>
+              </select>
+            </label>
+            <label class="field">
+              <span>Deliverable</span>
+              <select name="outputType">
+                <option value="pair">Headline + subheadline</option>
+                <option value="headline">Headline only</option>
+                <option value="hero">Complete hero direction</option>
+              </select>
+            </label>
+            <label class="field">
+              <span>Maximum words</span>
+              <input type="number" name="maxWords" min="4" max="24" value="14">
+            </label>
+            <label class="field">
+              <span>Preview width</span>
+              <select name="device">
+                <option value="mobile">Mobile-first</option>
+                <option value="desktop">Desktop</option>
+              </select>
+            </label>
+          </div>
+        </details>
+
+        <div class="form-footer">
+          <p><strong>Tip:</strong> Write inputs as natural phrases. Specific proof beats broad praise.</p>
+          <button class="button button-primary" type="submit">Generate headline directions</button>
+        </div>
+      </form>
+
+      <aside class="coach-card" aria-label="Writing coach">
+        <p class="step-label">Before you generate</p>
+        <h2>Use the research, not adjectives.</h2>
+        <ul>
+          <li><strong>Promise:</strong> What valuable change does the shopper want?</li>
+          <li><strong>Process:</strong> What makes the outcome believable?</li>
+          <li><strong>Proof:</strong> What concrete fact lowers skepticism?</li>
+          <li><strong>Fit:</strong> Who should immediately feel “this is for me”?</li>
+        </ul>
+        <p class="coach-note">The builder prioritizes formulas it can complete with your inputs. Empty fields are never replaced with invented claims.</p>
+      </aside>
+    </section>
+
+    <section class="results-section" id="resultsSection" hidden>
+      <div class="results-header">
+        <div>
+          <p class="step-label">Step 2</p>
+          <h2>Choose a direction worth testing</h2>
+          <p id="resultsSummary">Generated from your inputs.</p>
+        </div>
+        <div class="results-actions">
+          <button class="button button-quiet" id="showFavorites" type="button" aria-pressed="false">Favorites only</button>
+          <button class="button button-quiet" id="exportFavorites" type="button">Export favorites</button>
+        </div>
+      </div>
+      <div class="filter-row" id="filterRow" aria-label="Filter results"></div>
+      <div class="results-grid" id="results" aria-live="polite"></div>
+      <div class="empty-state" id="emptyState" hidden>
+        <h3>No complete formula matches yet.</h3>
+        <p>Add a mechanism, proof point, pain, alternative, or offer to unlock more useful directions.</p>
+      </div>
+    </section>
+
+    <section class="framework-section">
+      <div>
+        <p class="eyebrow">Built-in quality control</p>
+        <h2>A formula is a starting point—not permission to make weak claims.</h2>
+      </div>
+      <div class="framework-grid">
+        <article><span>01</span><h3>Hook the right attention</h3><p>Name the audience, problem, or outcome so the right shopper self-selects.</p></article>
+        <article><span>02</span><h3>Create desire</h3><p>Lead with the change customers want, not a list of product attributes.</p></article>
+        <article><span>03</span><h3>Give a reason to believe</h3><p>Support the promise with a mechanism, proof point, offer, or specific detail.</p></article>
+        <article><span>04</span><h3>Stay scannable</h3><p>Use the fewest words that preserve meaning and check the mobile line estimate.</p></article>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <p>Your inputs stay on this device. No AI, account, or API is used.</p>
+    <button class="text-button" id="clearSaved" type="button">Clear saved data</button>
+  </footer>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <script src="app.js"></script>
+</body>
+</html>
